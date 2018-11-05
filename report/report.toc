@@ -1,4 +1,30 @@
 \select@language {english}
 \contentsline {section}{\numberline {1}Abstract}{2}
-\contentsline {subsection}{\numberline {1.1}Hi}{2}
-\contentsline {section}{\numberline {2}Conclusion}{2}
+\contentsline {subsection}{\numberline {1.1}What is it About?}{2}
+\contentsline {subsection}{\numberline {1.2}Can someone Explain in Simple words?}{2}
+\contentsline {section}{\numberline {2}Baby Steps/Background}{3}
+\contentsline {subsection}{\numberline {2.1}Out of order Execution}{3}
+\contentsline {subsection}{\numberline {2.2}Speculation Execution}{3}
+\contentsline {subsection}{\numberline {2.3}Branch Prediction}{3}
+\contentsline {subsection}{\numberline {2.4}The Memory Hierarchy}{3}
+\contentsline {subsection}{\numberline {2.5}Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}{3}
+\contentsline {subsection}{\numberline {2.6}Return Oriented Programming}{3}
+\contentsline {section}{\numberline {3}What is Spectre? Why is it more famous than me?}{3}
+\contentsline {subsection}{\numberline {3.1}General}{3}
+\contentsline {subsection}{\numberline {3.2}Varient1}{3}
+\contentsline {subsection}{\numberline {3.3}Varient2}{3}
+\contentsline {subsection}{\numberline {3.4}Varient4}{3}
+\contentsline {section}{\numberline {4}Our Result(Code+Result(screenshot))}{3}
+\contentsline {section}{\numberline {5}Proof of Concept Study}{3}
+\contentsline {section}{\numberline {6}The Experiment}{3}
+\contentsline {subsection}{\numberline {6.1}Our Result}{3}
+\contentsline {subsection}{\numberline {6.2}Our Technique}{3}
+\contentsline {section}{\numberline {7}Mitigations}{4}
+\contentsline {subsection}{\numberline {7.1}Preventing Speculative Execution}{4}
+\contentsline {subsection}{\numberline {7.2}Preventing Access to Secret Data}{4}
+\contentsline {subsection}{\numberline {7.3}Preventing Data from Entering Covert Channels}{4}
+\contentsline {subsection}{\numberline {7.4}Limiting Data Extraction from Covert Channels}{4}
+\contentsline {subsection}{\numberline {7.5}Preventing Branch Poisoning}{4}
+\contentsline {section}{\numberline {8}Current Work Going On}{4}
+\contentsline {section}{\numberline {9}Conclusion}{4}
+\contentsline {section}{\numberline {10}Acknowledgement}{4}
