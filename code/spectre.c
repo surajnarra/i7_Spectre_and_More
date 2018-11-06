@@ -136,7 +136,8 @@ int main(int argc, const char** argv)
 		for(int j=1;j<256;j++){
 			if(a[max]<a[j]) max=j;
 		}
-		printf("Reading secret value : %c \n",max);
+		size_t l = t+(size_t)(secret-(char*)buffer);
+		printf("Reading secret value at %lu : %c \n",l,max);
 
 
 	}

