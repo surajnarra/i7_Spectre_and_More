@@ -349,7 +349,7 @@ There are three mechanisms involved in this mitigation:-
 	\item \textbf{Indirect Branch Predictor Barrier (IBPB) : } prevents software running before setting the barrier from affecting branch prediction by software running after the barrier, i.e., by \textbf{flushing the BTB(Branch Target Buffer)} state.
 \end{itemize}
 These controls are enabled following a microcode patch and require operating system or BIOS support for use. \textbf{The performance impact} varies from \textbf{a few percent} to a factor of \textbf{4} or more, depending on which countermeasures are employed, how comprehensively they are applied (e.g. limited use in the kernel vs. full protection for all processes), and the efficiency of the hardware and microcode implementations.
-\section{Current Work Going On}
+%\section{Current Work Going On}
 \section{Conclusion}
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who had taught us a lot of stuff packed into the constraints of the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
