@@ -236,7 +236,19 @@ Alternatively, the software could be modified to use serializing or speculation 
 
 The above are some \textbf{cheap alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
 \subsection{Preventing Access to Secret Data}
+We can have a separate process which does the restricted tasks.Because Spectre attacks only leverage the victim’s permissions to access the data hence by isolating them using the process abstraction is a very elegant way to prevent access to secret data. Google Chrome opens each website as a seperate process for the same reason. This is arguably an efficient and cost effective way of defeating spectre which is applied in lots of real worls applications.
+\subsubsection{More Info}
+Two methods are employed for such preventions
+\begin{itemize}
+	\item \textbf{Replaces array bounds checking with index masking	:} Instead of checking that an array index is within bounds, we apply a bit mask to the index, ensuring that it is not much bigger than the array size. While masking may result in access outside the bounds of the array, this limits the distance of the bounds violation, preventing the attacker from accessing arbitrary memory. Hence secret data is effectively protected from the attacker.
+	\item \textbf{protects access to pointers by xoring them with a pseudo-random poison values	:} Here if the poison value is not known to the attacker the pointer is of no use to him/her.More significantly, the poison value ensures that mispredictions on the branch instructions used for type checks will result in pointers associated with type being used for another type.
+\end{itemize}
 \subsection{Preventing Data from Entering Covert Channels}
+Future processors could potentially track whether data was
+fetched as the result of a speculative operation and, if so,
+prevent that data from being used in subsequent operations
+that might leak it. Current processors do not generally have
+this capability, however.
 \subsection{Limiting Data Extraction from Covert Channels}
 \subsection{Preventing Branch Poisoning}
 \section{Current Work Going On}
