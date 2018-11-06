@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage[toc,page]{appendix}
 \usepackage[english]{babel}
 \usepackage{natbib}
 \usepackage{url}
@@ -73,15 +74,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-\subsection{What is it About?}
+\subsection{What is Spectre?}
 This is a simple report template with the UCT logo. Feel free to use/modify it to suit your needs. Variables that need to be altered have been commented to make modifications easier. For example if you need to change the university logo, look for the comment \texttt{\% University Logo} in this file and then make appropriate modifications in that line.
 
 A Table of Contents and a bibliography have also been implemented. To add entries to your bibliography, simply edit \texttt{biblist.bib} in the root folder and then use the \texttt{\textbackslash cite\{\ldots\}} command in \texttt{main.tex} \cite{bibtex}. The Table of Contents will be updated automatically.
 
 I hope that you find this template both visually appealing and useful. \\
 \subsection{Can someone Explain in Simple words?}
+\subsection{Is is Really a ghost?}
+\textbf{Yes!}
 
-\hspace{1 cm}--- Linus
 
 \section{Baby Steps/Background}
 \subsection{Out of order Execution}
@@ -95,7 +97,6 @@ I hope that you find this template both visually appealing and useful. \\
 \subsection{Varient1}
 \subsection{Varient2}
 \subsection{Varient4}
-\section{Our Result(Code+Result(screenshot))}
 \section{Proof of Concept Study}
 \section{The Experiment}
 \subsection{Our Result}
@@ -113,5 +114,30 @@ I hope that you find this template both visually appealing and useful. \\
 \newpage
 \bibliographystyle{plain}
 \bibliography{biblist}
-
+\newpage
+\begin{appendices}	
+	\section{: Meltdown. Lets melt its cocoon}
+	% the \\ insures the section title is centered below the phrase: AppendixA
+	
+	PersonX: Do you have a Sibling?\\
+	
+	Spectre: Ahh yes I have one named Meltdown\\
+		
+	PersonX: Can you tell us something about it?\\
+	
+	Spectre: Like every pair of Siblings we are from same Parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet we are not the same. It is different from me in the following sense.
+	
+	\section{:  Onomastics of Spectre and Meltdown}
+	% the \\ insures the section title is centered below the phrase: Appendix B
+	
+	PersonX: What was the reason that your parents chose these names for you?\\
+	
+	Spectre: Well I don't know. You should go and ask my parents I suppose. From what they have told me or what many believe is the following reason. For me it is because since my internals are based on "Speculative Execution"  so they wanted something similar sounding.\\ When I was born/discovered they knew I am very dangerous to a department called cyber security hence one of my parents "Paul Kocher" named me "Spectre" which really means a ghost. I not only was supposed to haunt the cyber security proffessionals but also was largely invisible to the ordinary program execution.\\
+	
+	PersonX: What about the naming of "Meltdown"?\\
+	
+	Spectre: The thinking of the name of "Meltdown" actually ironically haunts me and makes me really jealous. It is believed to be coined by one of my parent "Daniel Gruss" . The reason given for this coining of name was that since it melts the boundary between programs and OS it is aptly called "Meltdown". The name also made it sounds really devastating, with a huge impact, like an actual meltdown in a nuclear reactor.\\
+	Moreover, in German, meltdown is 'Kernschmelze,' which means 'melting of the core'. Since we call the CPU as a core and indeed a 'CPU Kern' so it is also a wordplay, implying that the CPU is not in a good condition."
+	
+\end{appendices}
 \end{document}
