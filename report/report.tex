@@ -172,7 +172,22 @@ Several properties of the cache coherency protocol such as \textbf{\textit{cache
 \subsection{General}
 Spectre is a class of attacks that exploit security vulnerabilities in most modern processors. Specifically, the persistent effects (in cache) of speculative execution resulting from a branch mis-prediction are used to read data that is supposed to be inaccessible to the attacker. The assumption that speculative execution can be completely rolled back turns out to be wrong, and spectre attacks read this leaked data. There are several variants to spectre, we describe two of them below.
 \subsection{Variant1 - Bounds Check Bypass}
-\subsection{Varient2}
+This variant involves training the CPU's branch predictor to mis-predict a \textbf{conditional branch}, causing some instructions that read secret data to be executed. 
+\begin{enumerate}
+    \item The attacker can steal data from another process by identifying useful instruction sequences and causing them to run (by requesting a service from the victim like for example, a system call) within the victim's context, leaking secret data to the cache which the attacker can then read (via timing analysis). \item The attacker can use its own code to steal data to which it is not privy from its own context.
+\end{enumerate}
+ A potential target of the second kind of attack is browsers that run sandboxed JavaScript code (which most modern browsers do). A malicious website can potentially read the entire address space of the browser possibly stealing passwords and bank information.
+
+\subsection{Variant2 - Branch Target Injection}
+Variant 2 exploits \textit{indirect branches} by training the \textbf{Branch Target Buffer} (BTB), much like variant 1 trains the conditional branch predictor. An indirect branch is a jump instruction in which the target address is not specified directly and is instead fetched from memory (for example - load eax, address; jmp eax)
+
+CPUs use the same BTB across different contexts and privilege levels. The attacker exploits this feature in order to influence the prediction of an indirect branch in the \textit{victim's} context. The attack goes like this - 
+ \begin{enumerate}
+ \item Attacker finds an exploitable section of code that reads some secret data in victim's binaries (Or creates one in some cases, like in linux cloud VMs).
+ \item Attacker trains the indirect branch predictor (from its address space) to send execution to the exploitable code. (This can be complicated, as one needs to know the details of inner workings of CPUs which are often trade secrets.)
+ \item Victim executes target code, and before the CPU realizes that its prediction was wrong, secret data is written to cache.
+ \item Attacker infers secret data from cache through timing analysis.
+ \end{enumerate}
 \subsection{Varient4}
 \section{Our Result(Code+Result(screenshot))}
 \section{Proof of Concept Study}
