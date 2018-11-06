@@ -224,7 +224,17 @@ void spectreAttack(size_t larger_x)
 \subsection{Our Technique}
 \newpage
 \section{Mitigations}
+Several Solutions for Spectre attacks have been proposed. They rely on the basic architecture that Spectre exploits and try to catch hold of that at these \textbf{checkpoints}. Studying Mitigations is another very different perspective of understanding this attack. We discuss the extent of these mitigations on various dimensions such as \textbf{applicability}, \textbf{effectiveness} and \textbf{cost}.
 \subsection{Preventing Speculative Execution}
+A very simple approach to this is to prevent Speculative Execution altogether. Spectre relies heavily on speculative execution as seen in section 2.2 . Ensuring that an instruction is \textbf{executed only when control flow reaches}\ that instruction \textbf{eliminates Spectre}. Hence it is very effective in this sense.\\
+
+ Note that we dont get this security for free. We have \textbf{traded speed for security} here. While effective as a countermeasure, preventing speculative execution would cause a \textbf{significant degradation} in the \textbf{performance} of the processor. This \textbf{limits its applicability}. \\
+
+Current processors do \textbf{not} have software which can \textbf{issue commands} to disable speculative execution but they may like to include that in near future given the fact that discovery of this vulnerability is quite recent. Alternatively, some hardware products (such as embedded systems) could switch to alternate processor models that do not implement speculative execution. \\
+
+Alternatively, the software could be modified to use serializing or speculation blocking instructions that ensure that instructions following them are not executed speculatively. Intel and AMD recommend the use of the \textbf{\textit{lfence}} instruction.\\
+
+The above are some \textbf{cheap alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
 \subsection{Preventing Access to Secret Data}
 \subsection{Preventing Data from Entering Covert Channels}
 \subsection{Limiting Data Extraction from Covert Channels}
