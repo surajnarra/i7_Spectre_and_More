@@ -118,7 +118,29 @@ I hope that you find this template both visually appealing and useful. \\
 
 \section{Baby Steps/Background}
 \subsection{Out of order Execution}
+Out of order execution is a paradigm in which instructions are executed not in the order of how they appear but on the input data and execution units availiability to cpu for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
+\subsubsection{More details}
+The earlier processors( \textbf{in-order executive} ) differ from an \textbf{OoOE ( out of order executive)} processor in processing an instruction as follows. An inorder processor fetches the instruction, waits for it's inputs and availiability of execution units and then executes the instruction. It finally writes the result of instruction into the appropriate register in the register file. 
+
+In contrast, OoOE processors breaks up the processing of instructions into these steps:
+\begin{enumerate}
+	\item Fetch the instruction.
+	\item Dispatch it to an instruction queue.
+	\item Executes the instructions in the queue based on the availiability of data and execution units.
+	\item The results are queued and are written to the register file in the order of appearance.
+\end{enumerate}
+
+Note that the execution of instructions in step 3 doesn't follow the program order of instruction. 
+This results in utilising, otherwise stalled clock cycles. The processor finally rearranges the result in the order of appearance to make it appear that it processed them in order. 
+
+Further, modern processor uses some decoupling techinques such as renaming of registers and a certain \textbf{VLIW} architechture to effectively use this paradigm.
+
+   The take away point is that modern processors are mostly OoOE and they execute instructions out of order for efficiency. 
+  
 \subsection{Speculation Execution}
+
+When a processor encounters a branch instruction whose branching condition is not yet evaluated ( generally, because this instruction is being executed out of order), the \textbf{speculative execution paradigm} allows the processor to make a guess and take the branch and starts executing. \\
+The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good brach prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions.  
 \subsection{Branch Prediction}
 \subsection{The Memory Hierarchy}
 \subsection{Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}
