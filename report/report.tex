@@ -181,7 +181,7 @@ In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead
 \textbf{Return-Oriented Programming (ROP)} is a technique by which an attacker who has the control of execution, in particular, the stack pointer can make the victim perform arbitary complex operations by chaining together machine code snippets, called \textbf{gadgets}, found in the code of the vulnerable victim.
 
 Less formally, assume that an attacker has control of the stack pointer of the victim and that the  victim's code contains many code snippets( we refer them as \textbf{gadgets}) which does some small useful work for the attacker. Now, the attacker can first find those gadgets and chain them, making the victim excute one gadget after another by changing the contents of the stack pointer( which has the arguments for the executing snippet on cpu and it's return address). Finally, we note that the attacker can get access of the stack pointer through a  \textbf{buffer overflow} attack.
-\section{What is Spectre? Why is it more famous than me?}
+\section{What is Spectre?}
 \subsection{General}
 Spectre is a class of attacks that exploit security vulnerabilities in most modern processors. Specifically, the persistent effects (in cache) of speculative execution resulting from a branch mis-prediction are used to read data that is supposed to be inaccessible to the attacker. The assumption that speculative execution can be completely rolled back turns out to be wrong, and spectre attacks read this leaked data. There are several variants to spectre, we describe two of them below.
 \subsection{Variant1 - Bounds Check Bypass}
