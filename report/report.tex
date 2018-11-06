@@ -118,7 +118,9 @@ I hope that you find this template both visually appealing and useful. \\
 
 \section{Baby Steps/Background}
 \subsection{Out of order Execution}
+
 \textbf{Out of order execution} is a paradigm in which instructions are executed not in the order of how they appear but on the \textbf{input data and execution units availiability} to the processor for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
+
 \subsubsection{More details}
 The earlier processors( \textbf{in-order executive} ) differ from an \textbf{OoOE ( out of order executive)} processor in processing an instruction as follows. An inorder processor fetches the instruction, waits for it's inputs and availiability of execution units and then executes the instruction. It finally writes the result of instruction into the appropriate register in the register file. 
 
@@ -138,10 +140,12 @@ Further, modern processor uses some decoupling techinques such as renaming of re
    The take away point is that modern processors are mostly OoOE and they execute instructions out of order for efficiency. 
   
 \subsection{Speculation Execution}
+
 When a processor encounters a branch instruction whose branching condition is not yet evaluated ( generally, because this instruction is being executed out of order), the \textbf{speculative execution paradigm} allows the processor to make a guess and take the branch and starts executing. \\
 The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good brach prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
 
 Let us see some of the mechanisms for prediction employed in modern-day processors.  
+
 \subsection{Branch Prediction}
 In general, processors predict the following for preventing stalls 
 \begin{enumerate}
@@ -280,11 +284,40 @@ We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideC
 
 \newpage
 \section{Mitigations}
+Several Solutions for Spectre attacks have been proposed. They rely on the basic architecture that Spectre exploits and try to catch hold of that at these \textbf{checkpoints}. Studying Mitigations is another very different perspective of understanding this attack. We discuss the extent of these mitigations on various dimensions such as \textbf{applicability}, \textbf{effectiveness} and \textbf{cost}.
 \subsection{Preventing Speculative Execution}
+A very simple approach to this is to prevent Speculative Execution altogether. Spectre relies heavily on speculative execution as seen in section 2.2 . Ensuring that an instruction is \textbf{executed only when control flow reaches}\ that instruction \textbf{eliminates Spectre}. Hence it is very effective in this sense.\\
+
+ Note that we dont get this security for free. We have \textbf{traded speed for security} here. While effective as a countermeasure, preventing speculative execution would cause a \textbf{significant degradation} in the \textbf{performance} of the processor. This \textbf{limits its applicability}. \\
+
+Current processors do \textbf{not} have software which can \textbf{issue commands} to disable speculative execution but they may like to include that in near future given the fact that discovery of this vulnerability is quite recent. Alternatively, some hardware products (such as embedded systems) could switch to alternate processor models that do not implement speculative execution. \\
+
+Alternatively, the software could be modified to use serializing or speculation blocking instructions that ensure that instructions following them are not executed speculatively. Intel and AMD recommend the use of the \textbf{\textit{lfence}} instruction.\\
+
+The above are some \textbf{cheap alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
 \subsection{Preventing Access to Secret Data}
+We can have a \textbf{separate process} which does the restricted tasks. Because Spectre attacks only \textbf{leverage} the \textbf{victim’s permissions} to access the data hence by isolating them using the process abstraction is a very elegant way to prevent access to secret data. \textbf{Google Chrome} opens \textbf{each website} as a \textbf{seperate process} for the same reason. This is arguably an \textbf{efficient} and \textbf{cost effective} way of defeating spectre which is applied in lots of real world applications.
+\subsubsection{More Info}
+Two methods are employed for such preventions
+\begin{itemize}
+	\item \textbf{Replaces array bounds checking with index masking	:} Instead of checking that an array index is within bounds, we apply a bit mask to the index, ensuring that it is not much bigger than the array size. While masking may result in access outside the bounds of the array, this limits the distance of the bounds violation, preventing the attacker from accessing arbitrary memory. Hence secret data is effectively protected from the attacker.
+	\item \textbf{protects access to pointers by xoring them with a pseudo-random poison values	:} Here if the poison value is not known to the attacker the pointer is of no use to him/her.More significantly, the poison value ensures that mispredictions on the branch instructions used for type checks will result in pointers associated with type being used for another type.
+\end{itemize}
 \subsection{Preventing Data from Entering Covert Channels}
+Future processors could potentially \textbf{track} whether data was
+fetched as the result of a \textbf{speculative} operation and, \textbf{if so},
+\textbf{prevent that data from being} used in subsequent operations
+that might leak it. Current processors do not generally have
+this capability, however.
 \subsection{Limiting Data Extraction from Covert Channels}
 \subsection{Preventing Branch Poisoning}
+There are three mechanisms involved in this mitigation:- 
+\begin{itemize}
+	\item \textbf{Indirect Branch Restricted Speculation (IBRS) : } prevents indirect branches in \textbf{privileged code} from being affected by branches in less privileged code. The processor enters a special IBRS mode, which is \textbf{not influenced} by any computations outside of IBRS modes.
+	\item \textbf{Single Thread Indirect Branch Prediction (STIBP) : } restricts branch prediction sharing between software executing on the \textbf{hyperthreads} of the \textbf{same core}.
+	\item \textbf{Indirect Branch Predictor Barrier (IBPB) : } prevents software running before setting the barrier from affecting branch prediction by software running after the barrier, i.e., by \textbf{flushing the BTB(Branch Target Buffer)} state.
+\end{itemize}
+These controls are enabled following a microcode patch and require operating system or BIOS support for use. \textbf{The performance impact} varies from \textbf{a few percent} to a factor of \textbf{4} or more, depending on which countermeasures are employed, how comprehensively they are applied (e.g. limited use in the kernel vs. full protection for all processes), and the efficiency of the hardware and microcode implementations.
 \section{Current Work Going On}
 \section{Conclusion}
 \section{Acknowledgement}
