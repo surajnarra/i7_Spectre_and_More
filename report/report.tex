@@ -87,8 +87,8 @@
 			160050043\\
 			160050083\\
 			160050072\\
-			1600500XX\\
-			1600500XX\\% Your Student Number
+			160050087\\
+			160050101\\% Your Student Number
 		\end{flushright}
 	\end{minipage}\\[2 cm]
 	
@@ -189,7 +189,6 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
  \item Attacker infers secret data from cache through timing analysis.
  \end{enumerate}
 \subsection{Varient4}
-\section{Our Result(Code+Result(screenshot))}
 \section{Proof of Concept Study}
 \section{The Experiment}
 \subsection{Experiment Setup}
@@ -201,8 +200,8 @@ uint8_t temp = 0;
 char* secret = "Some Secret Value";
 uint8_t array[256*4096];
 \end{lstlisting}
-buffer is accessible using restrictedAccess()
-secret is to be stolen
+buffer is a charecter array accessible using restrictedAccess()\\
+secret is to be stolen\\
 array is helper(side channel) to steal secret  
 \subsubsection{Restricted Access}
 \begin{lstlisting}[style=CStyle]
@@ -216,7 +215,7 @@ uint8_t restrictedAccess(size_t x)
 	}
 }
 \end{lstlisting}
-This is a simple C function which gives access to elements within buffer\_ size and restricts access to locations outside buffer size by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function 
+This is a simple C function which gives access to elements within buffer\_ size and \textbf{restricts access} to locations \textbf{outside buffer\_size} by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function 
 \subsubsection{Flush side channel}
 \begin{lstlisting}[style=CStyle]
 void flushSideChannel()
@@ -228,11 +227,12 @@ void flushSideChannel()
 	for (i = 0; i < 256; i++) _mm_clflush(&array[i*4096 +DELTA]);
 }
 \end{lstlisting}
-Almost all Operating Systems implement a policy called \textbf{On-Demand-Allocation}. According to this policy the OS allocates memory to a process only if the process accesses it. Elements of array(line 4) are accessed and assigned 0(could be any value) to ensure that memory is allocated to array. Flushing the elements of array is required to ensure that all elements of array are brought to cache by the function spectreAttack during \textbf{speculative execution}(Look at section Spectre Attack for better understanding) \\
-There is no significance of DELTA. Any DELTA can be used.\\
+Almost all Operating Systems implement a policy called \textbf{On-Demand-Allocation}. According to this policy the OS allocates memory to a process only if the process accesses it. Elements of array(line 4) are accessed and assigned 0(could be any value) to ensure that memory is allocated to array.\\
+Flushing the elements of array is required to ensure that all elements of array are brought to cache by the function spectreAttack during \textbf{speculative execution} (go through section Spectre Attack for better understanding) \\
+There is no significance of DELTA. Any other value can be used instead.\\
 Only array elements present in different pages are used to ensure that they are present in different pages to overcome effects of prefetching \\
 
-\subsubsection{Spectre Attack}
+\subsubsection{Spectre Attack(varient 1)}
 \begin{lstlisting}[style=CStyle]
 void spectreAttack(size_t larger_x)
 {
@@ -252,9 +252,9 @@ void spectreAttack(size_t larger_x)
 }
 \end{lstlisting}
 
-This function flushes buffer\_size and calls restrictedAccess() with elements within buffer\_size enough number of times. As restrictedAccess() requires buffer\_size to check if the access is valid and buffer\_size was flushed to memory(its not present in cache), it takes a lot of time to retrive buffer\_size. As most processors use branch predictors and as restrictedAccess() is called with valid index many times, the \textbf{branch predictor gets trained} to pridect \textbf{branch not taken} in the `if condition' of restrictedAccess().\\
-After this the function calls flushSideChannel() to ensure that all elements are brought to cache only during execution of line 15.\\
-Calling spectreAttack with a large value say larger\_x should ideally return 0, but because the buffer\_size is flushed and speculative execution predicts branch not taken the restrictedAccess(larger\_x) returns buffer[larger\_x] and if the statement in line 15 gets executed, $array[s*4096+DELTA]$ is brought to cache.\\
+This function flushes buffer\_size and calls restrictedAccess() with elements within buffer\_size enough number of times. As restrictedAccess() requires buffer\_size to check if the access is valid and buffer\_size was flushed to memory(its not present in cache), it takes a \textbf{lot of time to retrive buffer\_size}. As most processors use branch predictors and as restrictedAccess() is called with valid index many times, the \textbf{branch predictor gets trained} to pridect \textbf{branch not taken} in the `if condition' of restrictedAccess().\\
+After this the function calls flushSideChannel() to ensure that all elements are \textbf{brought to cache only during execution of line 15}.\\
+Calling spectreAttack with a large value say larger\_x should ideally return 0, but because the buffer\_size is flushed and speculative execution \textbf{predicts branch not taken} the restrictedAccess(larger\_x) returns buffer[larger\_x] and if the statement in line 15 gets executed, $array[s*4096+DELTA]$ is brought to cache.\\
 Immediately after buffer\_size has arrived from memory the proccessor realizes that the speculative execution was wrong(by execution of if statement in restrictedAccess()) and reverts back everything that happened till this point.
 But this does not flush the element $array[s*4096+DELTA]$ from cache. 
 The current state is all the elements except $array[s*4096+DELTA]$ are present in main memory but $array[s*4096+DELTA]$ is present in the cache.   
@@ -363,6 +363,17 @@ These controls are enabled following a microcode patch and require operating sys
 	
 	\textbf{Spectre}: The thinking of the name of "Meltdown" actually ironically haunts me and makes me really jealous. It is believed to be coined by one of my parent \textbf{Daniel Gruss} . The reason given for this coining of name was that since it \textbf{melts the boundary} \textbf{between programs} and \textbf{OS} it is aptly called "Meltdown". The name also made it sounds really devastating, with a huge impact, like an actual \textbf{meltdown in a nuclear reactor}.\\
 	Moreover, in \textbf{German}, meltdown is \textbf{'Kernschmelze'}, which means \textbf{'melting of the core'}. Since we call the CPU as a core and indeed a 'CPU Kern' so it is also a wordplay, implying that the CPU is not in a good condition."
+
+
+\section{: KAISER(patches Meltdown but not Spectre)}
+
+Kernel Page Table Isolation(KPTI), previously known as KAISER(Kernel Address Isolation to have Side channels Efficiently Removed) is a kernel feature to mitigate the Meltdown security vunerability. It doesn't provide a safeguard against Spectre.
+
+KPTI fixes leaks by \textbf{seperating user-space and kernel-space page tables} completely. One set of page table consisting of both user-space and kernel-space addresses exists but is only used when the the system is running in kernel mode.The second set of page tables for use in user mode contains a copy of user-space and a \textbf{minimal set of kernel-space mappings} that provides the information needed to enter or exit system calls, interrupts and exceptions.
+
+The reason why KPTI doesn't work for Spectre is Spectre security vunerability is \textbf{completely occurs in the user-space addresses,} hence splitting user-space and kernel-space addresses into different page tables yields no solution.
+
+   
 	
 \end{appendices}
 \end{document}
