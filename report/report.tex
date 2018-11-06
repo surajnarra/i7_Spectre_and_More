@@ -106,16 +106,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-\subsection{What is Spectre?}
-This is a simple report template with the UCT logo. Feel free to use/modify it to suit your needs. Variables that need to be altered have been commented to make modifications easier. For example if you need to change the university logo, look for the comment \texttt{\% University Logo} in this file and then make appropriate modifications in that line.
+This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently named \textbf{"Spectre"} from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations require basics understanding of some terms which is covered in Appendix A.\\
 
-A Table of Contents and a bibliography have also been implemented. To add entries to your bibliography, simply edit \texttt{biblist.bib} in the root folder and then use the \texttt{\textbackslash cite\{\ldots\}} command in \texttt{main.tex} \cite{bibtex}. The Table of Contents will be updated automatically.
+Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}. We then mention the \textbf{proof of concept} study done by google. \\
 
-I hope that you find this template both visually appealing and useful. \\
-\subsection{Can someone Explain in Simple words?}
-\subsection{Is is Really a ghost?}
-\textbf{Yes!}
-
+Finally we discuss \textbf{mitigations} with respect to different dimensions of effectiveness cost and applicability.
+%
+%This is a simple report template with the UCT logo. Feel free to use/modify it to suit your needs. Variables that need to be altered have been commented to make modifications easier. For example if you need to change the university logo, look for the comment \texttt{\% University Logo} in this file and then make appropriate modifications in that line.
+%
+%A Table of Contents and a bibliography have also been implemented. To add entries to your bibliography, simply edit \texttt{biblist.bib} in the root folder and then use the \texttt{\textbackslash cite\{\ldots\}} command in \texttt{main.tex} \cite{bibtex}. The Table of Contents will be updated automatically.
 \section{Baby Steps/Background}
 \subsection{Out of order Execution}
 
@@ -158,7 +157,6 @@ Processors also contain a component called \textbf{Branch Target Buffer (BTB) } 
 For conditional branching, as the target address is already encoded in the instruction, such mapping is not needed. Instead, the branch outcome history is used for predicting. Processors also uses the branch outcome history for predicting direct and indirect branches also. 
 
 It is to be noted that the above used branch-prediction logic is typically not shared across physical cores. Hence, the processor learns only from previous branches executed on the same core. This is useful information for an attacker.
-\newpage
 \subsection{The Memory Hierarchy}
 In general, the memory of the CPU is divided into three caches and an external memory and is \textbf{hierarchial}. This is to allow faster access time to the data essential to the process running on the CPU. The chain of access is passed from \textbf{L1} cache to \textbf{L2} cache, from \textbf{L2} to \textbf{L3} cache and then to external memory based on whether we recieve a hit on the presence of the required data among the caches. The L1 cache has the fastest  access time and this slows down as we move down this hierarchy. It is to noted that while each core has it's own L1 and L2 caches the L3 is common for the cores.
 
@@ -191,7 +189,7 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
 \subsection{Varient4}
 \section{Our Result(Code+Result(screenshot))}
 \section{Proof of Concept Study}
-\section{The Experiment}
+\section{The Experiment\cite{SeedLabs}}
 \subsection{Experiment Setup}
 \subsubsection{Setting the context}
 \begin{lstlisting}[style=CStyle]
@@ -298,7 +296,7 @@ We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideC
 
 
 \newpage
-\section{Mitigations}
+\section{Mitigations\cite{Kocher2018spectre}}
 Several Solutions for Spectre attacks have been proposed. They rely on the basic architecture that Spectre exploits and try to catch hold of that at these \textbf{checkpoints}. Studying Mitigations is another very different perspective of understanding this attack. We discuss the extent of these mitigations on various dimensions such as \textbf{applicability}, \textbf{effectiveness} and \textbf{cost}.
 \subsection{Preventing Speculative Execution}
 A very simple approach to this is to prevent Speculative Execution altogether. Spectre relies heavily on speculative execution as seen in section 2.2 . Ensuring that an instruction is \textbf{executed only when control flow reaches}\ that instruction \textbf{eliminates Spectre}. Hence it is very effective in this sense.\\
@@ -341,6 +339,12 @@ These controls are enabled following a microcode patch and require operating sys
 \bibliography{biblist}
 \newpage
 \begin{appendices}	
+	\section{: Terminology}
+	\begin{itemize}
+		\item \textbf{Processor : }
+		\item \textbf{Pipeline : }
+		\item ...
+	\end{itemize}
 	\section{: Meltdown. Lets melt its cocoon}
 	% the \\ insures the section title is centered below the phrase: AppendixA
 	
@@ -352,7 +356,7 @@ These controls are enabled following a microcode patch and require operating sys
 	
 	\textbf{Spectre}: Like every pair of Siblings we are from same Parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet we are not the same. It is different from me in the following sense.
 	
-	\section{:  Onomastics of Spectre and Meltdown}
+	\section{:  Onomastics of Spectre and Meltdown \cite{NameOrigin}}
 	% the \\ insures the section title is centered below the phrase: Appendix B
 	
 	\textbf{PersonX}: What was the reason that your parents chose these names for you?\\
