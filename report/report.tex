@@ -338,6 +338,9 @@ fetched as the result of a \textbf{speculative} operation and, \textbf{if so},
 that might leak it. Current processors do not generally have
 this capability, however.
 \subsection{Limiting Data Extraction from Covert Channels}
+Since spectre gets information from covert channels, one way of mitigating would be to limit control over these channels and thereby \textit{limiting the data extraction}. Multiple apporaches have been suggested to this end, one of which is to disable resolution of \textbf{javascript timer, shared array buffers} ( which are critical in javascript based spectre attack) in modern browsers. ( We see that our malicious spectre javascript code runs on \textbf{chrome} but not on \textbf{firefox} as it disables these functionalities).
+
+As to it's effectiveness, these mitigations does seem to decrease the attackers performance but doesn't nullify them.
 \subsection{Preventing Branch Poisoning}
 There are three mechanisms involved in this mitigation:- 
 \begin{itemize}
