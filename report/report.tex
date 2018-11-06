@@ -116,6 +116,7 @@ Finally we discuss \textbf{mitigations} with respect to different dimensions of 
 %
 %A Table of Contents and a bibliography have also been implemented. To add entries to your bibliography, simply edit \texttt{biblist.bib} in the root folder and then use the \texttt{\textbackslash cite\{\ldots\}} command in \texttt{main.tex} \cite{bibtex}. The Table of Contents will be updated automatically.
 \section{Baby Steps/Background}
+Let's look into the underlying facts and techniques that spectre is based upon.
 \subsection{Out of order Execution}
 
 \textbf{Out of order execution} is a paradigm in which instructions are executed not in the order of how they appear but on the \textbf{input data and execution units availiability} to the processor for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
@@ -201,7 +202,10 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
  \item Victim executes target code, and before the CPU realizes that its prediction was wrong, secret data is written to cache.
  \item Attacker infers secret data from cache through timing analysis.
  \end{enumerate}
-\subsection{Varient4}
+\subsection{Varient4 - Speculative store bypass}
+
+Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
+The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
 %\section{Proof of Concept Study}
 \section{The Experiment\cite{SeedLabs}}
 \subsection{Experiment Setup}
@@ -365,10 +369,17 @@ It was a great experience working as a team and reading various papers . This pr
 \begin{appendices}	
 	\section{: Terminology}
 	\begin{itemize}
-		\item \textbf{Processor : }
-		\item \textbf{Pipeline : }
-		\item ...
+		\item \textbf{VLIW architechture : } Architectures which allows programs to explicitly specify instructions to execute in parallel. 
+		\item \textbf{Instruction pipeline cycle : }  A technique in which instruction execution is divided into stages\textit{( I , E , M , W , ..)} for implementing instruction-level parallelism within a single processor. 
+		\item \textbf{transient instructions : } Instructions which shouldn't be executed through program logic, but are being speculatively executed. The cpu state after their execution is reverted eventually.  
+		\item \textbf{Direct calls and jumps : } Branch instructions whose target address is encoded in the instruction itself.
+		\item \textbf{Indirect calls and jumps : } Branch instructions whose target address is stored in a register specified in the instruction. Thus, their target address are computed at runtime.
+		\item \textbf{Conditional Branching : } Branch instructions whose target address depends on the "condition variable" of the instruction.
+		\item \textbf{Buffer overflow : }  An attack where a buffer is overflown and malicious code is injected into the required memory locations.
+		\item \textbf{cache line bouncing : } When parallel processors access the same cache line, the ownership / valid bit for the cache line is transfered / bounces from one processor to another.
+		\item \textbf{false sharing : }	 A degrading usage pattern where two processors alter different data elements in the same cache line. Logically they aren't sharing any data, but because of granularity of cache line.
 	\end{itemize}
+	\newpage
 	\section{: Meltdown. Lets melt its cocoon}
 	% the \\ insures the section title is centered below the phrase: AppendixA
 	
