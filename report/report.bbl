@@ -18,6 +18,12 @@ JACK MORSE.
 \newblock
   \url{https://mashable.com/2018/01/05/meltdown-spectre-names-cpu-bug/#d_X6BY6pXSqE}.
 
+\bibitem{NETSPECTRE}
+Michael Schwarz, Martin Schwarzl, Moritz Lipp, and Daniel Gruss.
+\newblock Netspectre: Read arbitrary memory over network.
+\newblock
+  \url{https://mlq.me/download/netspectre.pdf?fbclid=IwAR3EOBJUvy5ZRB3c44Sl6nokSZN2y1I0k1yAafGUOtauIIbZCztNvd_AqzI}.
+
 \bibitem{SeedLabs}
 Syracuse~University Wenliang~Du.
 \newblock Spectre attack lab.

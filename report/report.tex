@@ -142,7 +142,14 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
 Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction to execute before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
 The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
 %\section{Proof of Concept Study}
+\subsection{New Varient? - Spectre on Net}
+All the above discussed variants need to be run locally to retrieve data. However, a remote attack based on \textit{spectre variant 1} has been found, which has been termed as \textbf{'NetSpectre'} by it's founders. This attack doesn't need the attacker code running on the target machine and hence, can potentially read any arbitary memory on the internet.  
+\subsubsection{Technical details}
+Like \textit{variant 1}, this attack requires the presence of a \textbf{spectre gadget} in the code of the target, or broadly speaking, in any API or framework that the target uses. In particular, it uses two kinds of Spectre gadgets. A \textbf{\textit{leak gadget}} which changes the microarchitecture state depending on the value of secret data and a \textbf{\textit{transmit gadget}} which conveys the state. Here, it is not the value returned by the transmit gadget, that leaks the state, but it's \textit{response time}.
 
+The attack now goes similar to variant 1, by first training the victim to speculatively execute the \textit{leak gadget}, and then ask for an unauthorized bit, thereby changing the \textbf{micro-architetural state}. The state is then retrieved by the \textit{transmit gadget}. As such, this attack is to be considered as an application of variant 1. 
+
+The attack has be conducted by \textbf{Graz University of Technology}\cite{NETSPECTRE} using an \textbf{AVX-based covert channel} and are able to leak 60 bits from internet per hour. The attack needs to send a higher number of packets to leak data faster, but using large number of packets could make this attack detectable.
 \section{The Experiment\cite{SeedLabs}}
 
 \subsection{Experiment Setup}
@@ -244,7 +251,7 @@ $scores[i]$ stores the number of times $i^{th}$ element was brought to cache.
 CACHE\_HIT\_THRESHOLD is used to differentiate between elements already present in cache and those coming from main memory.
 
   
-\subsection{Our Result}
+\subsection{Our Result\cite{GITHUB_LINK}}
 
 We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideChannel()} 1000 number of times and then found the element of array which was present in cache for the most number of times. The result is as follows.
 
