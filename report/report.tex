@@ -106,7 +106,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
+This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in \textbf{javascript} to extract sensitive information such as passwords. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
 
 Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}.
 % We then mention the \textbf{proof of concept} study done by google. \\
@@ -118,7 +118,7 @@ Finally we discuss \textbf{mitigations} with respect to different dimensions of 
 %A Table of Contents and a bibliography have also been implemented. To add entries to your bibliography, simply edit \texttt{biblist.bib} in the root folder and then use the \texttt{\textbackslash cite\{\ldots\}} command in \texttt{main.tex} \cite{bibtex}. The Table of Contents will be updated automatically.
 \section{What is Spectre?}
 \subsection{General}
-Spectre is a class of attacks that exploit security vulnerabilities in most modern processors. Specifically, the persistent effects (in cache) of speculative execution resulting from a branch mis-prediction are used to read data that is supposed to be inaccessible to the attacker. The assumption that speculative execution can be completely rolled back turns out to be wrong, and spectre attacks read this leaked data. There are several variants to spectre, we describe two of them below.
+    \textbf{Spectre} is a class of attacks that exploit security vulnerabilities in most modern processors. Specifically, the persistent effects (in cache) of \textbf{speculative execution} resulting from a branch mis-prediction are used to read data that is supposed to be \textbf{inaccessible} to the attacker. The assumption that speculative execution can be completely rolled back turns out to be wrong, and spectre attacks read this \textbf{leaked data}. There are several variants to spectre, we describe two of them below.
 \subsection{Variant1 - Bounds Check Bypass}
 This variant involves training the CPU's branch predictor to mis-predict a \textbf{conditional branch}, causing some instructions that read secret data to be executed. 
 \begin{enumerate}
