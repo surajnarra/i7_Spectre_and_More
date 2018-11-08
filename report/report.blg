@@ -13,6 +13,10 @@ I was expecting a `,' or a `}'---line 18 of file biblist.bib
  :  note = {}
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 23 of file biblist.bib
+ :  howpublished = {\url{https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html}}
+ :                                                                                                                .
+I'm skipping whatever remains of this entry
 You've used 3 entries,
             2118 wiz_defined-function locations,
             513 strings with 4674 characters,
@@ -54,4 +58,4 @@ warning$ -- 0
 while$ -- 6
 width$ -- 4
 write$ -- 30
-(There were 2 error messages)
+(There were 3 error messages)
