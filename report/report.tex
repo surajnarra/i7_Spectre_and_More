@@ -256,25 +256,25 @@ We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideC
 
 \newpage
 \section{Mitigations\cite{Kocher2018spectre}}
-Several Solutions for Spectre attacks have been proposed. They rely on the basic architecture that Spectre exploits and try to catch hold of that at these \textbf{checkpoints}. Studying Mitigations is another very different perspective of understanding this attack. We discuss the extent of these mitigations on various dimensions such as \textbf{applicability}, \textbf{effectiveness} and \textbf{cost}.
+Several solutions for Spectre attacks have been proposed. They rely on the basic architecture that Spectre exploits and try to catch hold of that at these \textbf{checkpoints}. Studying Mitigations is another very different perspective of understanding this attack. We discuss the extent of these mitigations on various dimensions such as \textbf{applicability}, \textbf{effectiveness} and \textbf{cost}.
 \subsection{Preventing Speculative Execution}
-A very simple approach to this is to prevent Speculative Execution altogether. Spectre relies heavily on speculative execution as seen in section 2.2 . Ensuring that an instruction is \textbf{executed only when control flow reaches}\ that instruction \textbf{eliminates Spectre}. Hence it is very effective in this sense.\\
+A very simple approach to this is to prevent \textbf{speculative execution altogether}. Spectre relies heavily on speculative execution as seen in section 2.2 . Ensuring that an instruction is \textbf{executed only when control flow reaches}\ that instruction \textbf{eliminates Spectre}. Hence it is very effective in this sense.\\
 
- Note that we dont get this security for free. We have \textbf{traded speed for security} here. While effective as a countermeasure, preventing speculative execution would cause a \textbf{significant degradation} in the \textbf{performance} of the processor. This \textbf{limits its applicability}. \\
+ Note that we don't get this security for free. We have \textbf{traded speed for security} here. While effective as a countermeasure, preventing speculative execution would cause a \textbf{significant degradation} in the \textbf{performance} of the processor. This \textbf{limits its applicability}. \\
 
-Current processors do \textbf{not} have software which can \textbf{issue commands} to disable speculative execution but they may like to include that in near future given the fact that discovery of this vulnerability is quite recent. Alternatively, some hardware products (such as embedded systems) could switch to alternate processor models that do not implement speculative execution. \\
+Current processors do \textbf{not} have software which can \textbf{issue commands} to disable speculative execution but they may like to include that in near future given the fact that the discovery of this vulnerability is quite recent. Alternatively, some hardware products (such as embedded systems) could switch to alternate processor models that do not implement speculative execution. \\
 
-Software techniques like usng a \textbf{empty loop} of say 100 instructions such that speculative execution doesn't crosse these many instructions before it figures out the wrong prediction.
-Alternatively, the software could be modified to use serializing or speculation blocking instructions that ensure that instructions following them are not executed speculatively. Intel and AMD recommend the use of the \textbf{\textit{lfence}} instruction.\\
+Software techniques, like using an \textbf{empty loop} of say, 100 instructions such that speculative execution doesn't cross these many instructions before it figures out the wrong prediction.
+Alternatively, the software could be modified to use serializing or speculation blocking instructions that ensures that instructions following them are not executed speculatively. Intel and AMD recommend the use of the \textbf{\textit{lfence}} instruction.\\
 
-The above are some \textbf{temporary alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
+The below are some \textbf{temporary alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
 \subsection{Preventing Access to Secret Data}
-We can have a \textbf{separate process} which does the restricted tasks. Because Spectre attacks only \textbf{leverage} the \textbf{victim’s permissions} to access the data hence by isolating them using the process abstraction is a very elegant way to prevent access to secret data. \textbf{Google Chrome} opens \textbf{each website} as a \textbf{seperate process} for the same reason. This is arguably an \textbf{efficient} and \textbf{cost effective} way of defeating spectre which is applied in lots of real world applications.
+We can have a \textbf{separate process} which does the restricted tasks. Because Spectre attacks only \textbf{leverage} the \textbf{victim’s permissions} to access the data hence by isolating them using the process abstraction is a very elegant way to prevent access to secret data. \textbf{Google Chrome} opens \textbf{each website} as a \textbf{seperate process} for the same reason. This is arguably an \textbf{efficient} and \textbf{cost effective} way of defeating Spectre which is applied in lots of real world applications.
 \subsubsection{More Info}
-Two methods are employed for such preventions
+Two methods are employed for such preventions.
 \begin{itemize}
-	\item \textbf{Replaces array bounds checking with index masking	:} Instead of checking that an array index is within bounds, we apply a bit mask to the index, ensuring that it is not much bigger than the array size. While masking may result in access outside the bounds of the array, this limits the distance of the bounds violation, preventing the attacker from accessing arbitrary memory. Hence secret data is effectively protected from the attacker.
-	\item \textbf{protects access to pointers by xoring them with a pseudo-random poison values	:} Here if the poison value is not known to the attacker the pointer is of no use to him/her.More significantly, the poison value ensures that mispredictions on the branch instructions used for type checks will result in pointers associated with type being used for another type.
+	\item \textbf{Replaces array bounds checking with index masking	:} Instead of checking wether an array index is within bounds, we apply a bit mask to the index, ensuring that it is not much bigger than the array size. While masking may result in access outside the bounds of the array, this limits the distance of the bounds violation, preventing the attacker from accessing arbitrary memory. Hence secret data is effectively protected from the attacker.
+	\item \textbf{protects access to pointers by xoring them with a pseudo-random poison values	:} Here if the poison value is not known to the attacker the pointer is of no use to him/her.More significantly, the poison value ensures that mispredictions on the branch instructions used for type checks will result in pointers associated with one type being used for another type.
 \end{itemize}
 \subsection{Preventing Data from Entering Covert Channels}
 Future processors could potentially \textbf{track} whether data was
@@ -357,21 +357,20 @@ It was a great experience working as a team and reading various papers . This pr
 	\subsection{The Memory Hierarchy}
 	In general, the memory of the CPU is divided into three caches and an external memory and is \textbf{hierarchial}. This is to allow faster access time to the data essential to the process running on the CPU. The chain of access is passed from \textbf{L1} cache to \textbf{L2} cache, from \textbf{L2} to \textbf{L3} cache and then to external memory based on whether we recieve a hit on the presence of the required data among the caches. The L1 cache has the fastest  access time and this slows down as we move down this hierarchy. It is to noted that while each core has it's own L1 and L2 caches the L3 is common for the cores.
 	
-%	The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
+	The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
 	
 	Several properties of the cache coherency protocol such as \textbf{\textit{cache-line bouncing}}, \textbf{\textit{false sharing}} can sometimes be abused as a replacement for cache eviction using the \textbf{clflush instruction} or eviction patterns.
 	\subsection{Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}
-	Several microarchitectural components such as \textbf{\textit{caches and
-			 BTB}} improve the processor performance by predicting future program behavior. They achieve this by maintaining a state that depends on past program behavior and assume that future behavior is similar to or related to past behavior. 
+	Several microarchitectural components such as \textbf{\textit{caches, BTB}},.. improve the processor performance by predicting future program behavior. They achieve this by maintaining a state that depends on past program behavior and assume that future behavior is similar to or related to past behavior. 
 	
 	When several programs are being executed on the same hardware, the changes in the microarchitectural state that is due to a single program could potentially affect other programs. \textbf{Microarchitectural Side-Channel Attacks(MSCAs)} are attacks which use this fact and get restricted data of a victim process.
 	
-	The targets of attacks include \textit{extracting keys from cryptographic primitives}, \textit{co-location detection}, breaking \textit{ASLR}, \textit{keystroke monitoring}, \textit{website fingerprinting}, and \textit{genome processing}.
+	The targets of attacks include \textit{extracting keys from cryptographic primitives}, \textit{co-location detection}, breaking \textit{ASLR}, \textit{keystroke monitoring}, \textit{website fingerprinting}, and \textit{genome processing}..
 	
 	Briefly speaking, inorder to perform these attacks, the atackers primarily use the \textbf{"Flush+Reload"}
 	technique and also \textbf{"Evict+Reload"}, a variant, on microarchitectural components such as instruction cache, lower level caches, the BTB, branch history, etc. 
 	
-	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{clflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
+	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{cflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
 	
 	In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead of flush, the required cache line is evicted by accessing other memory locations. When sufficiently large accesses are made, the required line is evicted as there is only a finite space in the caches.
 	
