@@ -106,7 +106,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations require basics understanding of some terms which is covered in Appendix A.
+This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
 
 Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}.
 % We then mention the \textbf{proof of concept} study done by google. \\
@@ -122,9 +122,10 @@ Spectre is a class of attacks that exploit security vulnerabilities in most mode
 \subsection{Variant1 - Bounds Check Bypass}
 This variant involves training the CPU's branch predictor to mis-predict a \textbf{conditional branch}, causing some instructions that read secret data to be executed. 
 \begin{enumerate}
-    \item The attacker can steal data from another process by identifying useful instruction sequences and causing them to run (by requesting a service from the victim like for example, a system call) within the victim's context, leaking secret data to the cache which the attacker can then read (via timing analysis). \item The attacker can use its own code to steal data to which it is not privy from its own context.
+    \item The attacker can steal data from another process by identifying useful instruction sequences and causing them to run (by requesting a service from the victim like for example, a system call) within the victim's context, leaking secret data to the cache which the attacker can then read (via timing analysis). 
+    \item The attacker can use its own code to steal data to which it is not privy to.
 \end{enumerate}
- A potential target of the second kind of attack is browsers that run sandboxed JavaScript code (which most modern browsers do). A malicious website can potentially read the entire address space of the browser possibly stealing passwords and bank information.
+ A potential target of the second kind of attack are browsers that run sandboxed JavaScript code (which most modern browsers do). A malicious website can potentially read the entire address space of the browser possibly stealing passwords and bank information.
 
 \subsection{Variant2 - Branch Target Injection}
 Variant 2 exploits \textit{indirect branches} by training the \textbf{Branch Target Buffer} (BTB), much like variant 1 trains the conditional branch predictor. An indirect branch is a jump instruction in which the target address is not specified directly and is instead fetched from memory (for example - load eax, address; jmp eax)
@@ -133,16 +134,19 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
  \begin{enumerate}
  \item Attacker finds an exploitable section of code that reads some secret data in victim's binaries (Or creates one in some cases, like in linux cloud VMs).
  \item Attacker trains the indirect branch predictor (from its address space) to send execution to the exploitable code. (This can be complicated, as one needs to know the details of inner workings of CPUs which are often trade secrets.)
- \item Victim executes target code, and before the CPU realizes that its prediction was wrong, secret data is written to cache.
+ \item Victim executes target code, and before the CPU realizes that its prediction was wrong, secret data is written to the cache.
  \item Attacker infers secret data from cache through timing analysis.
  \end{enumerate}
 \subsection{Varient4 - Speculative store bypass}
 
-Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
+Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction to execute before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
 The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
 %\section{Proof of Concept Study}
+
 \section{The Experiment\cite{SeedLabs}}
+
 \subsection{Experiment Setup}
+
 \subsubsection{Setting the context}
 \begin{lstlisting}[style=CStyle]
 unsigned int buffer_size = 10;
@@ -151,9 +155,10 @@ uint8_t temp = 0;
 char* secret = "Some Secret Value";
 uint8_t array[256*4096];
 \end{lstlisting}
-buffer is a charecter array accessible using restrictedAccess()\\
-secret is to be stolen\\
-array is helper(side channel) to steal secret  
+"buffer" is a character array accessible using restrictedAccess().\\
+"secret" is to be stolen.\\
+"array" is helper(side channel) to steal secret.  
+
 \subsubsection{Restricted Access}
 \begin{lstlisting}[style=CStyle]
 uint8_t restrictedAccess(size_t x)
@@ -166,7 +171,8 @@ uint8_t restrictedAccess(size_t x)
 	}
 }
 \end{lstlisting}
-This is a simple C function which gives access to elements within buffer\_ size and \textbf{restricts access} to locations \textbf{outside buffer\_size} by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function 
+This is a simple C function which gives access to elements within buffer\_ size and \textbf{restricts access} to locations \textbf{outside buffer\_size} by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function. 
+
 \subsubsection{Flush side channel}
 \begin{lstlisting}[style=CStyle]
 void flushSideChannel()
