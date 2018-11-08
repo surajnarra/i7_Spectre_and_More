@@ -43,7 +43,7 @@
 
 \setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 
-\title{i7: Spectre and More}								% Title
+\title{Spectre and More}								% Title
 \author{Sanchit Jain\\ Charith \\Rahul\\Suraj\\ Jeevitesh}								% Author
 \date{\today}											% Date
 
@@ -106,7 +106,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations require basics understanding of some terms which is covered in Appendix A.
+This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
 
 Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}.
 % We then mention the \textbf{proof of concept} study done by google. \\
@@ -122,9 +122,10 @@ Spectre is a class of attacks that exploit security vulnerabilities in most mode
 \subsection{Variant1 - Bounds Check Bypass}
 This variant involves training the CPU's branch predictor to mis-predict a \textbf{conditional branch}, causing some instructions that read secret data to be executed. 
 \begin{enumerate}
-    \item The attacker can steal data from another process by identifying useful instruction sequences and causing them to run (by requesting a service from the victim like for example, a system call) within the victim's context, leaking secret data to the cache which the attacker can then read (via timing analysis). \item The attacker can use its own code to steal data to which it is not privy from its own context.
+    \item The attacker can steal data from another process by identifying useful instruction sequences and causing them to run (by requesting a service from the victim like for example, a system call) within the victim's context, leaking secret data to the cache which the attacker can then read (via timing analysis). 
+    \item The attacker can use its own code to steal data to which it is not privy to.
 \end{enumerate}
- A potential target of the second kind of attack is browsers that run sandboxed JavaScript code (which most modern browsers do). A malicious website can potentially read the entire address space of the browser possibly stealing passwords and bank information.
+ A potential target of the second kind of attack are browsers that run sandboxed JavaScript code (which most modern browsers do). A malicious website can potentially read the entire address space of the browser possibly stealing passwords and bank information.
 
 \subsection{Variant2 - Branch Target Injection}
 Variant 2 exploits \textit{indirect branches} by training the \textbf{Branch Target Buffer} (BTB), much like variant 1 trains the conditional branch predictor. An indirect branch is a jump instruction in which the target address is not specified directly and is instead fetched from memory (for example - load eax, address; jmp eax)
@@ -133,16 +134,19 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
  \begin{enumerate}
  \item Attacker finds an exploitable section of code that reads some secret data in victim's binaries (Or creates one in some cases, like in linux cloud VMs).
  \item Attacker trains the indirect branch predictor (from its address space) to send execution to the exploitable code. (This can be complicated, as one needs to know the details of inner workings of CPUs which are often trade secrets.)
- \item Victim executes target code, and before the CPU realizes that its prediction was wrong, secret data is written to cache.
+ \item Victim executes target code, and before the CPU realizes that its prediction was wrong, secret data is written to the cache.
  \item Attacker infers secret data from cache through timing analysis.
  \end{enumerate}
-\subsection{Varient4 - Speculative store bypass}
+\subsection{Variant4 - Speculative store bypass}
 
-Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
+Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction to execute before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
 The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
 %\section{Proof of Concept Study}
+
 \section{The Experiment\cite{SeedLabs}}
+
 \subsection{Experiment Setup}
+
 \subsubsection{Setting the context}
 \begin{lstlisting}[style=CStyle]
 unsigned int buffer_size = 10;
@@ -151,9 +155,10 @@ uint8_t temp = 0;
 char* secret = "Some Secret Value";
 uint8_t array[256*4096];
 \end{lstlisting}
-buffer is a charecter array accessible using restrictedAccess()\\
-secret is to be stolen\\
-array is helper(side channel) to steal secret  
+"buffer" is a character array accessible using restrictedAccess().\\
+"secret" is to be stolen.\\
+"array" is helper(side channel) to steal secret.  
+
 \subsubsection{Restricted Access}
 \begin{lstlisting}[style=CStyle]
 uint8_t restrictedAccess(size_t x)
@@ -166,7 +171,8 @@ uint8_t restrictedAccess(size_t x)
 	}
 }
 \end{lstlisting}
-This is a simple C function which gives access to elements within buffer\_ size and \textbf{restricts access} to locations \textbf{outside buffer\_size} by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function 
+This is a simple C function which gives access to elements within buffer\_ size and \textbf{restricts access} to locations \textbf{outside buffer\_size} by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function. 
+
 \subsubsection{Flush side channel}
 \begin{lstlisting}[style=CStyle]
 void flushSideChannel()
@@ -238,7 +244,7 @@ $scores[i]$ stores the number of times $i^{th}$ element was brought to cache.
 CACHE\_HIT\_THRESHOLD is used to differentiate between elements already present in cache and those coming from main memory.
 
   
-\subsection{Our Result\cite{GITHUB_LINK}}
+\subsection{Our Result}
 
 We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideChannel()} 1000 number of times and then found the element of array which was present in cache for the most number of times. The result is as follows.
 
@@ -250,35 +256,36 @@ We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideC
 
 \newpage
 \section{Mitigations\cite{Kocher2018spectre}}
-Several Solutions for Spectre attacks have been proposed. They rely on the basic architecture that Spectre exploits and try to catch hold of that at these \textbf{checkpoints}. Studying Mitigations is another very different perspective of understanding this attack. We discuss the extent of these mitigations on various dimensions such as \textbf{applicability}, \textbf{effectiveness} and \textbf{cost}.
+Several solutions for Spectre attacks have been proposed. They rely on the basic architecture that Spectre exploits and try to catch hold of that at these \textbf{checkpoints}. Studying Mitigations is another very different perspective of understanding this attack. We discuss the extent of these mitigations on various dimensions such as \textbf{applicability}, \textbf{effectiveness} and \textbf{cost}.
 \subsection{Preventing Speculative Execution}
-A very simple approach to this is to prevent Speculative Execution altogether. Spectre relies heavily on speculative execution as seen in section 2.2 . Ensuring that an instruction is \textbf{executed only when control flow reaches}\ that instruction \textbf{eliminates Spectre}. Hence it is very effective in this sense.\\
+A very simple approach to this is to prevent \textbf{speculative execution altogether}. Spectre relies heavily on speculative execution as seen in section 2.2 . Ensuring that an instruction is \textbf{executed only when control flow reaches}\ that instruction \textbf{eliminates Spectre}. Hence it is very effective in this sense.\\
 
- Note that we dont get this security for free. We have \textbf{traded speed for security} here. While effective as a countermeasure, preventing speculative execution would cause a \textbf{significant degradation} in the \textbf{performance} of the processor. This \textbf{limits its applicability}. \\
+ Note that we don't get this security for free. We have \textbf{traded speed for security} here. While effective as a countermeasure, preventing speculative execution would cause a \textbf{significant degradation} in the \textbf{performance} of the processor. This \textbf{limits its applicability}. \\
 
-Current processors do \textbf{not} have software which can \textbf{issue commands} to disable speculative execution but they may like to include that in near future given the fact that discovery of this vulnerability is quite recent. Alternatively, some hardware products (such as embedded systems) could switch to alternate processor models that do not implement speculative execution. \\
+Current processors do \textbf{not} have software which can \textbf{issue commands} to disable speculative execution but they may like to include that in near future given the fact that the discovery of this vulnerability is quite recent. Alternatively, some hardware products (such as embedded systems) could switch to alternate processor models that do not implement speculative execution. \\
 
-Alternatively, the software could be modified to use serializing or speculation blocking instructions that ensure that instructions following them are not executed speculatively. Intel and AMD recommend the use of the \textbf{\textit{lfence}} instruction.\\
+Software techniques, like using an \textbf{empty loop} of say, 100 instructions such that speculative execution doesn't cross these many instructions before it figures out the wrong prediction.
+Alternatively, the software could be modified to use serializing or speculation blocking instructions that ensures that instructions following them are not executed speculatively. Intel and AMD recommend the use of the \textbf{\textit{lfence}} instruction.\\
 
-The above are some \textbf{cheap alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
+The below are some \textbf{temporary alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
 \subsection{Preventing Access to Secret Data}
-We can have a \textbf{separate process} which does the restricted tasks. Because Spectre attacks only \textbf{leverage} the \textbf{victim’s permissions} to access the data hence by isolating them using the process abstraction is a very elegant way to prevent access to secret data. \textbf{Google Chrome} opens \textbf{each website} as a \textbf{seperate process} for the same reason. This is arguably an \textbf{efficient} and \textbf{cost effective} way of defeating spectre which is applied in lots of real world applications.
+We can have a \textbf{separate process} which does the restricted tasks. Because Spectre attacks only \textbf{leverage} the \textbf{victim’s permissions} to access the data hence by isolating them using the process abstraction is a very elegant way to prevent access to secret data. \textbf{Google Chrome} opens \textbf{each website} as a \textbf{seperate process} for the same reason. This is arguably an \textbf{efficient} and \textbf{cost effective} way of defeating Spectre which is applied in lots of real world applications.
 \subsubsection{More Info}
-Two methods are employed for such preventions
+Two methods are employed for such preventions.
 \begin{itemize}
-	\item \textbf{Replaces array bounds checking with index masking	:} Instead of checking that an array index is within bounds, we apply a bit mask to the index, ensuring that it is not much bigger than the array size. While masking may result in access outside the bounds of the array, this limits the distance of the bounds violation, preventing the attacker from accessing arbitrary memory. Hence secret data is effectively protected from the attacker.
-	\item \textbf{protects access to pointers by xoring them with a pseudo-random poison values	:} Here if the poison value is not known to the attacker the pointer is of no use to him/her.More significantly, the poison value ensures that mispredictions on the branch instructions used for type checks will result in pointers associated with type being used for another type.
+	\item \textbf{Replaces array bounds checking with index masking	:} Instead of checking wether an array index is within bounds, we apply a bit mask to the index, ensuring that it is not much bigger than the array size. While masking may result in access outside the bounds of the array, this limits the distance of the bounds violation, preventing the attacker from accessing arbitrary memory. Hence secret data is effectively protected from the attacker.
+	\item \textbf{protects access to pointers by xoring them with a pseudo-random poison values	:} Here if the poison value is not known to the attacker the pointer is of no use to him/her.More significantly, the poison value ensures that mispredictions on the branch instructions used for type checks will result in pointers associated with one type being used for another type.
 \end{itemize}
 \subsection{Preventing Data from Entering Covert Channels}
-Future processors could potentially \textbf{track} whether data was
+Future processors could potentially \textbf{track} whether the data was being
 fetched as the result of a \textbf{speculative} operation and, \textbf{if so},
 \textbf{prevent that data from being} used in subsequent operations
 that might leak it. Current processors do not generally have
 this capability, however.
 \subsection{Limiting Data Extraction from Covert Channels}
-Since spectre gets information from covert channels, one way of mitigating would be to limit control over these channels and thereby \textit{limiting the data extraction}. Multiple apporaches have been suggested to this end, one of which is to disable resolution of \textbf{javascript timer, shared array buffers} ( which are critical in javascript based spectre attack) in modern browsers. ( We see that our malicious spectre javascript code runs on \textbf{chrome} but not on \textbf{firefox} as it disables these functionalities).
+Since spectre gets information from covert channels, one way of mitigating would be to limit control over these channels and thereby \textit{limiting the data extraction}. Multiple approaches have been suggested to this end, one of which is to disable the resolution of \textbf{javascript timer, shared array buffers} ( which are critical in javascript based spectre attack) in modern browsers. ( We see that our malicious spectre javascript code runs on \textbf{chrome} but not on \textbf{firefox} as it disables these functionalities).
 
-As to it's effectiveness, these mitigations does seem to decrease the attackers performance but doesn't nullify them.
+As to it's effectiveness, these mitigations does seem to decrease the attacker's performance but doesn't nullify them.
 \subsection{Preventing Branch Poisoning}
 There are three mechanisms involved in this mitigation:- 
 \begin{itemize}
@@ -287,6 +294,7 @@ There are three mechanisms involved in this mitigation:-
 	\item \textbf{Indirect Branch Predictor Barrier (IBPB) : } prevents software running before setting the barrier from affecting branch prediction by software running after the barrier, i.e., by \textbf{flushing the BTB(Branch Target Buffer)} state.
 \end{itemize}
 These controls are enabled following a microcode patch and require operating system or BIOS support for use. \textbf{The performance impact} varies from \textbf{a few percent} to a factor of \textbf{4} or more, depending on which countermeasures are employed, how comprehensively they are applied (e.g. limited use in the kernel vs. full protection for all processes), and the efficiency of the hardware and microcode implementations.
+\section{Current Work Going On}
 
 \section{Conclusions}
 This report provides an overview of Spectre, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by flush+reload and evict+reload.
@@ -296,10 +304,11 @@ Even though no real attack exploiting Spectre has been made till date, there are
 Intel is currently redisgning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome). <Something about effects on performance>
 
 We see now how Spectre is less of a 'bug' and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
-\section{Acknowledgement}
-We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who had taught us a lot of stuff packed into the constraints of the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
 
-We would also like to thank our \textbf{able TA's} who had not only clear our frequent doubts but also had managed the course in a very systematic and fair manner.\\
+\section{Acknowledgement}
+We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who has taught us a lot of stuff throughout the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
+
+We would also like to thank our \textbf{able TA's} who have not only clear our frequent doubts but also have managed the course in a very systematic and fair manner.\\
 
 It was a great experience working as a team and reading various papers . This project has not only showed us the horizons of research but also exposed us to one of the most famous vulnerability of all times.
   
@@ -307,7 +316,7 @@ It was a great experience working as a team and reading various papers . This pr
 \bibliographystyle{plain}
 \bibliography{biblist}
 \newpage
-\begin{appendices}
+\begin{appendices}	
 	\section{Baby Steps/Background}
 	Let's look into the underlying facts and techniques that spectre is based upon.
 	\subsection{Out of order Execution}
@@ -335,7 +344,7 @@ It was a great experience working as a team and reading various papers . This pr
 	\subsection{Speculation Execution}
 	
 	When a processor encounters a branch instruction whose branching condition is not yet evaluated ( generally, because this instruction is being executed out of order), the \textbf{speculative execution paradigm} allows the processor to make a guess and take the branch and starts executing. \\
-	The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good brach prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
+	The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good branch prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
 	
 	Let us see some of the mechanisms for prediction employed in modern-day processors.  
 	
@@ -366,7 +375,7 @@ It was a great experience working as a team and reading various papers . This pr
 	
 	Briefly speaking, inorder to perform these attacks, the atackers primarily use the \textbf{"Flush+Reload"}
 	technique and also \textbf{"Evict+Reload"}, a variant, on microarchitectural components such as instruction cache, lower level caches, the BTB, branch history, etc. 
-	\newpage
+	
 	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{cflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
 	
 	In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead of flush, the required cache line is evicted by accessing other memory locations. When sufficiently large accesses are made, the required line is evicted as there is only a finite space in the caches.
@@ -378,15 +387,15 @@ It was a great experience working as a team and reading various papers . This pr
 	
 	\section{: Terminology}
 	\begin{itemize}
-		\item \textbf{VLIW architechture : } Architectures which allows programs to explicitly specify instructions to execute in parallel. 
+		\item \textbf{VLIW architechture : } Architecture which allows programs to explicitly specify instructions to execute in parallel. 
 		\item \textbf{Instruction pipeline cycle : }  A technique in which instruction execution is divided into stages\textit{( I , E , M , W , ..)} for implementing instruction-level parallelism within a single processor. 
 		\item \textbf{transient instructions : } Instructions which shouldn't be executed through program logic, but are being speculatively executed. The cpu state after their execution is reverted eventually.  
-		\item \textbf{Direct calls and jumps : } Branch instructions whose target address is encoded in the instruction itself.
+		\item \textbf{Direct calls and jumps : } Branch instructions whose target address is encoded within the instruction itself.
 		\item \textbf{Indirect calls and jumps : } Branch instructions whose target address is stored in a register specified in the instruction. Thus, their target address are computed at runtime.
-		\item \textbf{Conditional Branching : } Branch instructions whose target address depends on the "condition variable" of the instruction.
+		\item \textbf{Conditional Branching : } Branch instructions whose target address depends upon the "condition variable" of the instruction.
 		\item \textbf{Buffer overflow : }  An attack where a buffer is overflown and malicious code is injected into the required memory locations.
 		\item \textbf{cache line bouncing : } When parallel processors access the same cache line, the ownership / valid bit for the cache line is transfered / bounces from one processor to another.
-		\item \textbf{false sharing : }	 A degrading usage pattern where two processors alter different data elements in the same cache line. Logically they aren't sharing any data, but because of granularity of cache line.
+		\item \textbf{false sharing : }	 A degrading usage pattern where two processors alter different data elements in the same cache line. Logically they aren't sharing any data, but because of granularity of cache line, the ownership of the cache line keeps shuffling.
 	\end{itemize}
 	\newpage
 	\section{: Meltdown. Lets melt its cocoon}
@@ -400,7 +409,6 @@ It was a great experience working as a team and reading various papers . This pr
 	
 	\textbf{Spectre}: Like every pair of Siblings we are from same Parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet we are not the same. It is different from me in the following sense. Meltdown is more easy to implement but also less general. It affects only Intel processors. It also reads the effects of speculative execution through the cache, but the speculative execution in this case is done while the CPU waits for a privilege check. 
 	That's right, Meltdown accesses the kernel memory (which is obviously secret to the process) by tricking the cpu into speculatively executing instructions that are supposed to be executed \textit{after} the privelege check \textit{before} the check is completed. Then its technique of obtaining the data from cache is similar to the ones I use. 
-	
 	\section{:  Onomastics of Spectre and Meltdown \cite{NameOrigin}}
 	% the \\ insures the section title is centered below the phrase: Appendix B
 	
@@ -410,7 +418,7 @@ It was a great experience working as a team and reading various papers . This pr
 	
 	\textbf{PersonX}: What about the naming of "Meltdown"?\\
 	
-	\textbf{Spectre}: The thinking of the name of "Meltdown" actually ironically haunts me and makes me really jealous. It is believed to be coined by one of my parent \textbf{Daniel Gruss} . The reason given for this coining of name was that since it \textbf{melts the boundary} \textbf{between programs} and \textbf{OS} it is aptly called "Meltdown". The name also made it sounds really devastating, with a huge impact, like an actual \textbf{meltdown in a nuclear reactor}.\\
+	\textbf{Spectre}: The idea behind the name "Meltdown" actually makes me really jealous. It is believed to be coined by one of my parents, \textbf{Daniel Gruss} . As it \textbf{melts the boundary} \textbf{between programs} and \textbf{OS}, it is aptly christened "Meltdown". The name also makes it sounds really devastating, with a huge impact, like an actual \textbf{meltdown in a nuclear reactor}.\\
 	Moreover, in \textbf{German}, meltdown is \textbf{'Kernschmelze'}, which means \textbf{'melting of the core'}. Since we call the CPU as a core and indeed a 'CPU Kern' so it is also a wordplay, implying that the CPU is not in a good condition."
 
 
