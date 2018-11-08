@@ -116,73 +116,6 @@ Finally we discuss \textbf{mitigations} with respect to different dimensions of 
 %This is a simple report template with the UCT logo. Feel free to use/modify it to suit your needs. Variables that need to be altered have been commented to make modifications easier. For example if you need to change the university logo, look for the comment \texttt{\% University Logo} in this file and then make appropriate modifications in that line.
 %
 %A Table of Contents and a bibliography have also been implemented. To add entries to your bibliography, simply edit \texttt{biblist.bib} in the root folder and then use the \texttt{\textbackslash cite\{\ldots\}} command in \texttt{main.tex} \cite{bibtex}. The Table of Contents will be updated automatically.
-\section{Baby Steps/Background}
-Let's look into the underlying facts and techniques that spectre is based upon.
-\subsection{Out of order Execution}
-
-\textbf{Out of order execution} is a paradigm in which instructions are executed not in the order of how they appear but the order depends on the \textbf{availiability of input data and execution units} to the processor for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
-
-\subsubsection{More details}
-The earlier processors( \textbf{in-order execution} ) differ from an \textbf{OoOE ( out of order execution)} processor in processing an instruction as follows. An inorder processor fetches the instruction, waits for it's inputs and availiability of execution units and then executes the instruction. It finally writes the result of instruction into the appropriate register in the register file. 
-
-In contrast, OoOE processors breaks up the processing of instructions into these steps:
-\begin{enumerate}
-	\item Fetch the instruction.
-	\item Dispatch it to an instruction queue.
-	\item Executes the instructions in the queue based on the availiability of data and execution units.
-	\item The results are queued and are written to the register file in the order of appearance.
-\end{enumerate}
-
-Note that the execution of instructions in step 3 doesn't follow the program order of instruction. 
-This results in utilising, otherwise stalled clock cycles. The processor finally rearranges the result in the order of appearance to make it appear that it processed them in order. 
-
-Further, modern processor uses some decoupling techinques such as renaming of registers and a certain \textbf{VLIW} architechture to effectively use this paradigm.
-
-   The take away point is that modern processors are mostly OoOE and they execute instructions out of order for efficiency. 
-  
-\subsection{Speculation Execution}
-
-When a processor encounters a branch instruction whose branching condition is not yet evaluated ( generally, because this instruction is being executed out of order), the \textbf{speculative execution paradigm} allows the processor to make a guess and take the branch and starts executing. \\
-The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good brach prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
-
-Let us see some of the mechanisms for prediction employed in modern-day processors.  
-
-\subsection{Branch Prediction}
-In general, processors predict the following for preventing stalls 
-\begin{enumerate}
-	\item The target address of \textit{ direct calls and jumps }.  
-	\item The target address of \textit{ indirect calls and jumps }.
-	\item The target address of \textit{ conditional branches }.
-\end{enumerate}
-Processors also contain a component called \textbf{Branch Target Buffer (BTB) } which keeps a mapping from addresses of recently executed branch instructions to destination addresses. The processors refer to the BTB during the \textbf{I-state} of the \textbf{instruction pipeline cycle} ( where the instructions are decoded) and predict the target address even before the instruction is executed.
-
-For conditional branching, as the target address is already encoded in the instruction, such mapping is not needed. Instead, the branch outcome history is used for predicting. Processors also uses the branch outcome history for predicting direct and indirect branches also. 
-
-It is to be noted that the above used branch-prediction logic is typically not shared across physical cores. Hence, the processor learns only from previous branches executed on the same core. This is useful information for an attacker.
-\subsection{The Memory Hierarchy}
-In general, the memory of the CPU is divided into three caches and an external memory and is \textbf{hierarchial}. This is to allow faster access time to the data essential to the process running on the CPU. The chain of access is passed from \textbf{L1} cache to \textbf{L2} cache, from \textbf{L2} to \textbf{L3} cache and then to external memory based on whether we recieve a hit on the presence of the required data among the caches. The L1 cache has the fastest  access time and this slows down as we move down this hierarchy. It is to noted that while each core has it's own L1 and L2 caches the L3 is common for the cores.
-
-The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
-
-Several properties of the cache coherency protocol such as \textbf{\textit{cache-line bouncing}}, \textbf{\textit{false sharing}} can sometimes be abused as a replacement for cache eviction using the \textbf{clflush instruction} or eviction patterns.
-\subsection{Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}
-Several microarchitectural components such as \textbf{\textit{caches, BTB}},.. improve the processor performance by predicting future program behavior. They achieve this by maintaining a state that depends on past program behavior and assume that future behavior is similar to or related to past behavior. 
-
-When several programs are being executed on the same hardware, the changes in the microarchitectural state that is due to a single program could potentially affect other programs. \textbf{Microarchitectural Side-Channel Attacks(MSCAs)} are attacks which use this fact and get restricted data of a victim process.
-
-The targets of attacks include \textit{extracting keys from cryptographic primitives}, \textit{co-location detection}, breaking \textit{ASLR}, \textit{keystroke monitoring}, \textit{website fingerprinting}, and \textit{genome processing}..
-
-Briefly speaking, inorder to perform these attacks, the atackers primarily use the \textbf{"Flush+Reload"}
-technique and also \textbf{"Evict+Reload"}, a variant, on microarchitectural components such as instruction cache, lower level caches, the BTB, branch history, etc. 
-\newpage
-In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{cflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
-
-In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead of flush, the required cache line is evicted by accessing other memory locations. When sufficiently large accesses are made, the required line is evicted as there is only a finite space in the caches.
-
-\subsection{Return Oriented Programming}
-\textbf{Return-Oriented Programming (ROP)} is a technique by which an attacker who has the control of execution, in particular, the stack pointer can make the victim perform arbitary complex operations by chaining together machine code snippets, called \textbf{gadgets}, found in the code of the vulnerable victim.
-
-Less formally, assume that an attacker has control of the stack pointer of the victim and that the  victim's code contains many code snippets( we refer them as \textbf{gadgets}) which does some small useful work for the attacker. Now, the attacker can first find those gadgets and chain them, making the victim excute one gadget after another by changing the contents of the stack pointer( which has the arguments for the executing snippet on cpu and it's return address). Finally, we note that the attacker can get access of the stack pointer through a  \textbf{buffer overflow} attack.
 \section{What is Spectre?}
 \subsection{General}
 Spectre is a class of attacks that exploit security vulnerabilities in most modern processors. Specifically, the persistent effects (in cache) of speculative execution resulting from a branch mis-prediction are used to read data that is supposed to be inaccessible to the attacker. The assumption that speculative execution can be completely rolled back turns out to be wrong, and spectre attacks read this leaked data. There are several variants to spectre, we describe two of them below.
@@ -374,7 +307,75 @@ It was a great experience working as a team and reading various papers . This pr
 \bibliographystyle{plain}
 \bibliography{biblist}
 \newpage
-\begin{appendices}	
+\begin{appendices}
+	\section{Baby Steps/Background}
+	Let's look into the underlying facts and techniques that spectre is based upon.
+	\subsection{Out of order Execution}
+	
+	\textbf{Out of order execution} is a paradigm in which instructions are executed not in the order of how they appear but the order depends on the \textbf{availiability of input data and execution units} to the processor for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
+	
+	\subsubsection{More details}
+	The earlier processors( \textbf{in-order execution} ) differ from an \textbf{OoOE ( out of order execution)} processor in processing an instruction as follows. An inorder processor fetches the instruction, waits for it's inputs and availiability of execution units and then executes the instruction. It finally writes the result of instruction into the appropriate register in the register file. 
+	
+	In contrast, OoOE processors breaks up the processing of instructions into these steps:
+	\begin{enumerate}
+		\item Fetch the instruction.
+		\item Dispatch it to an instruction queue.
+		\item Executes the instructions in the queue based on the availiability of data and execution units.
+		\item The results are queued and are written to the register file in the order of appearance.
+	\end{enumerate}
+	
+	Note that the execution of instructions in step 3 doesn't follow the program order of instruction. 
+	This results in utilising, otherwise stalled clock cycles. The processor finally rearranges the result in the order of appearance to make it appear that it processed them in order. 
+	
+	Further, modern processor uses some decoupling techinques such as renaming of registers and a certain \textbf{VLIW} architechture to effectively use this paradigm.
+	
+	The take away point is that modern processors are mostly OoOE and they execute instructions out of order for efficiency. 
+	
+	\subsection{Speculation Execution}
+	
+	When a processor encounters a branch instruction whose branching condition is not yet evaluated ( generally, because this instruction is being executed out of order), the \textbf{speculative execution paradigm} allows the processor to make a guess and take the branch and starts executing. \\
+	The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good brach prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
+	
+	Let us see some of the mechanisms for prediction employed in modern-day processors.  
+	
+	\subsection{Branch Prediction}
+	In general, processors predict the following for preventing stalls 
+	\begin{enumerate}
+		\item The target address of \textit{ direct calls and jumps }.  
+		\item The target address of \textit{ indirect calls and jumps }.
+		\item The target address of \textit{ conditional branches }.
+	\end{enumerate}
+	Processors also contain a component called \textbf{Branch Target Buffer (BTB) } which keeps a mapping from addresses of recently executed branch instructions to destination addresses. The processors refer to the BTB during the \textbf{I-state} of the \textbf{instruction pipeline cycle} ( where the instructions are decoded) and predict the target address even before the instruction is executed.
+	
+	For conditional branching, as the target address is already encoded in the instruction, such mapping is not needed. Instead, the branch outcome history is used for predicting. Processors also uses the branch outcome history for predicting direct and indirect branches also. 
+	
+	It is to be noted that the above used branch-prediction logic is typically not shared across physical cores. Hence, the processor learns only from previous branches executed on the same core. This is useful information for an attacker.
+	\subsection{The Memory Hierarchy}
+	In general, the memory of the CPU is divided into three caches and an external memory and is \textbf{hierarchial}. This is to allow faster access time to the data essential to the process running on the CPU. The chain of access is passed from \textbf{L1} cache to \textbf{L2} cache, from \textbf{L2} to \textbf{L3} cache and then to external memory based on whether we recieve a hit on the presence of the required data among the caches. The L1 cache has the fastest  access time and this slows down as we move down this hierarchy. It is to noted that while each core has it's own L1 and L2 caches the L3 is common for the cores.
+	
+	The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
+	
+	Several properties of the cache coherency protocol such as \textbf{\textit{cache-line bouncing}}, \textbf{\textit{false sharing}} can sometimes be abused as a replacement for cache eviction using the \textbf{clflush instruction} or eviction patterns.
+	\subsection{Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}
+	Several microarchitectural components such as \textbf{\textit{caches, BTB}},.. improve the processor performance by predicting future program behavior. They achieve this by maintaining a state that depends on past program behavior and assume that future behavior is similar to or related to past behavior. 
+	
+	When several programs are being executed on the same hardware, the changes in the microarchitectural state that is due to a single program could potentially affect other programs. \textbf{Microarchitectural Side-Channel Attacks(MSCAs)} are attacks which use this fact and get restricted data of a victim process.
+	
+	The targets of attacks include \textit{extracting keys from cryptographic primitives}, \textit{co-location detection}, breaking \textit{ASLR}, \textit{keystroke monitoring}, \textit{website fingerprinting}, and \textit{genome processing}..
+	
+	Briefly speaking, inorder to perform these attacks, the atackers primarily use the \textbf{"Flush+Reload"}
+	technique and also \textbf{"Evict+Reload"}, a variant, on microarchitectural components such as instruction cache, lower level caches, the BTB, branch history, etc. 
+	\newpage
+	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{cflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
+	
+	In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead of flush, the required cache line is evicted by accessing other memory locations. When sufficiently large accesses are made, the required line is evicted as there is only a finite space in the caches.
+	
+	\subsection{Return Oriented Programming}
+	\textbf{Return-Oriented Programming (ROP)} is a technique by which an attacker who has the control of execution, in particular, the stack pointer can make the victim perform arbitary complex operations by chaining together machine code snippets, called \textbf{gadgets}, found in the code of the vulnerable victim.
+	
+	Less formally, assume that an attacker has control of the stack pointer of the victim and that the  victim's code contains many code snippets( we refer them as \textbf{gadgets}) which does some small useful work for the attacker. Now, the attacker can first find those gadgets and chain them, making the victim excute one gadget after another by changing the contents of the stack pointer( which has the arguments for the executing snippet on cpu and it's return address). Finally, we note that the attacker can get access of the stack pointer through a  \textbf{buffer overflow} attack.
+	
 	\section{: Terminology}
 	\begin{itemize}
 		\item \textbf{VLIW architechture : } Architectures which allows programs to explicitly specify instructions to execute in parallel. 
