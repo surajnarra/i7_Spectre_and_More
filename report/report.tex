@@ -108,7 +108,7 @@
 \section{Abstract}
 This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in \textbf{javascript} to extract sensitive information such as passwords. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
 
-Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}.
+Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different variants}.
 % We then mention the \textbf{proof of concept} study done by google. \\
 
 Finally we discuss \textbf{mitigations} with respect to different dimensions of effectiveness, cost and applicability.
@@ -142,7 +142,7 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
 Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction to execute before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
 The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
 %\section{Proof of Concept Study}
-\subsection{New Varient? - Spectre on Net}
+\subsection{New variant? - Spectre on Net}
 All the above discussed variants need to be run locally to retrieve data. However, a remote attack based on \textit{spectre variant 1} has been found, which has been termed as \textbf{'NetSpectre'} by it's founders. This attack doesn't need the attacker code running on the target machine and hence, can potentially read any arbitary memory on the internet.  
 \subsubsection{Technical details}
 Like \textit{variant 1}, this attack requires the presence of a \textbf{spectre gadget} in the code of the target, or broadly speaking, in any API or framework that the target uses. In particular, it uses two kinds of Spectre gadgets. A \textbf{\textit{leak gadget}} which changes the microarchitecture state depending on the value of secret data and a \textbf{\textit{transmit gadget}} which conveys the state. Here, it is not the value returned by the transmit gadget, that leaks the state, but it's \textit{response time}.
@@ -196,7 +196,7 @@ Flushing the elements of array is required to ensure that all elements of array 
 There is no significance of DELTA. Any other value can be used instead.\\
 Only array elements present in different pages are used to ensure that they are present in different pages to overcome effects of prefetching \\
 
-\subsubsection{Spectre Attack(varient 1)}
+\subsubsection{Spectre Attack(variant 1)}
 \begin{lstlisting}[style=CStyle]
 void spectreAttack(size_t larger_x)
 {
