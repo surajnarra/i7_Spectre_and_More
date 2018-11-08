@@ -356,9 +356,13 @@ There are three mechanisms involved in this mitigation:-
 These controls are enabled following a microcode patch and require operating system or BIOS support for use. \textbf{The performance impact} varies from \textbf{a few percent} to a factor of \textbf{4} or more, depending on which countermeasures are employed, how comprehensively they are applied (e.g. limited use in the kernel vs. full protection for all processes), and the efficiency of the hardware and microcode implementations.
 \section{Current Work Going On}
 \section{Conclusions}
-This report provides an overview of Spectre, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. 
+This report provides an overview of Spectre, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by flush+reload and evict+reload.
 
 Even though no real attack exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in cloud systems where the isolation between instances is broken by variant 2. 
+
+Intel is currently redisgning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome). <Something about effects on performance>
+
+We see now how Spectre is less of a 'bug' and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who had taught us a lot of stuff packed into the constraints of the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
 
@@ -393,7 +397,8 @@ It was a great experience working as a team and reading various papers . This pr
 	
 	\textbf{PersonX}: Can you tell us something about it?\\
 	
-	\textbf{Spectre}: Like every pair of Siblings we are from same Parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet we are not the same. It is different from me in the following sense.
+	\textbf{Spectre}: Like every pair of Siblings we are from same Parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet we are not the same. It is different from me in the following sense. Meltdown is more easy to implement but also less general. It affects only Intel processors. It also reads the effects of speculative execution through the cache, but the speculative execution in this case is done while the CPU waits for a privilege check. 
+	That's right, Meltdown accesses the kernel memory (which is obviously secret to the process) by tricking the cpu into speculatively executing instructions that are supposed to be executed \textit{after} the privelege check \textit{before} the check is completed. Then its technique of obtaining the data from cache is similar to the ones I use. 
 	
 	\section{:  Onomastics of Spectre and Meltdown \cite{NameOrigin}}
 	% the \\ insures the section title is centered below the phrase: Appendix B
