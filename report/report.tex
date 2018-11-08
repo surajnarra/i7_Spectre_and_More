@@ -351,20 +351,21 @@ It was a great experience working as a team and reading various papers . This pr
 	\subsection{The Memory Hierarchy}
 	In general, the memory of the CPU is divided into three caches and an external memory and is \textbf{hierarchial}. This is to allow faster access time to the data essential to the process running on the CPU. The chain of access is passed from \textbf{L1} cache to \textbf{L2} cache, from \textbf{L2} to \textbf{L3} cache and then to external memory based on whether we recieve a hit on the presence of the required data among the caches. The L1 cache has the fastest  access time and this slows down as we move down this hierarchy. It is to noted that while each core has it's own L1 and L2 caches the L3 is common for the cores.
 	
-	The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
+%	The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
 	
 	Several properties of the cache coherency protocol such as \textbf{\textit{cache-line bouncing}}, \textbf{\textit{false sharing}} can sometimes be abused as a replacement for cache eviction using the \textbf{clflush instruction} or eviction patterns.
 	\subsection{Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}
-	Several microarchitectural components such as \textbf{\textit{caches, BTB}},.. improve the processor performance by predicting future program behavior. They achieve this by maintaining a state that depends on past program behavior and assume that future behavior is similar to or related to past behavior. 
+	Several microarchitectural components such as \textbf{\textit{caches and
+			 BTB}} improve the processor performance by predicting future program behavior. They achieve this by maintaining a state that depends on past program behavior and assume that future behavior is similar to or related to past behavior. 
 	
 	When several programs are being executed on the same hardware, the changes in the microarchitectural state that is due to a single program could potentially affect other programs. \textbf{Microarchitectural Side-Channel Attacks(MSCAs)} are attacks which use this fact and get restricted data of a victim process.
 	
-	The targets of attacks include \textit{extracting keys from cryptographic primitives}, \textit{co-location detection}, breaking \textit{ASLR}, \textit{keystroke monitoring}, \textit{website fingerprinting}, and \textit{genome processing}..
+	The targets of attacks include \textit{extracting keys from cryptographic primitives}, \textit{co-location detection}, breaking \textit{ASLR}, \textit{keystroke monitoring}, \textit{website fingerprinting}, and \textit{genome processing}.
 	
 	Briefly speaking, inorder to perform these attacks, the atackers primarily use the \textbf{"Flush+Reload"}
 	technique and also \textbf{"Evict+Reload"}, a variant, on microarchitectural components such as instruction cache, lower level caches, the BTB, branch history, etc. 
 	
-	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{cflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
+	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{clflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
 	
 	In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead of flush, the required cache line is evicted by accessing other memory locations. When sufficiently large accesses are made, the required line is evicted as there is only a finite space in the caches.
 	
