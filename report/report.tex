@@ -347,7 +347,10 @@ There are three mechanisms involved in this mitigation:-
 \end{itemize}
 These controls are enabled following a microcode patch and require operating system or BIOS support for use. \textbf{The performance impact} varies from \textbf{a few percent} to a factor of \textbf{4} or more, depending on which countermeasures are employed, how comprehensively they are applied (e.g. limited use in the kernel vs. full protection for all processes), and the efficiency of the hardware and microcode implementations.
 \section{Current Work Going On}
-\section{Conclusion}
+\section{Conclusions}
+This report provides an overview of Spectre, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. 
+
+Even though no real attack exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in cloud systems where the isolation between instances is broken by variant 2. 
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who had taught us a lot of stuff packed into the constraints of the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
 
