@@ -413,7 +413,7 @@ Kernel Page Table Isolation(KPTI), previously known as KAISER(Kernel Address Iso
 
 KPTI fixes leaks by \textbf{seperating user-space and kernel-space page tables} completely. One set of page table consisting of both user-space and kernel-space addresses exists but is only used when the the system is running in kernel mode.The second set of page tables for use in user mode contains a copy of user-space and a \textbf{minimal set of kernel-space mappings} that provides the information needed to enter or exit system calls, interrupts and exceptions.
 
-The reason why KPTI doesn't work for Spectre is Spectre security vunerability is \textbf{completely occurs in the user-space addresses,} hence splitting user-space and kernel-space addresses into different page tables yields no solution.
+The reason why KPTI doesn't work for Spectre is Spectre security vunerability \textbf{completely occurs in the user-space addresses,} hence splitting user-space and kernel-space addresses into different page tables yields no solution.
 
    
 	
