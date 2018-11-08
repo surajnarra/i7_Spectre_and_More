@@ -277,15 +277,15 @@ Two methods are employed for such preventions.
 	\item \textbf{protects access to pointers by xoring them with a pseudo-random poison values	:} Here if the poison value is not known to the attacker the pointer is of no use to him/her.More significantly, the poison value ensures that mispredictions on the branch instructions used for type checks will result in pointers associated with one type being used for another type.
 \end{itemize}
 \subsection{Preventing Data from Entering Covert Channels}
-Future processors could potentially \textbf{track} whether data was
+Future processors could potentially \textbf{track} whether the data was being
 fetched as the result of a \textbf{speculative} operation and, \textbf{if so},
 \textbf{prevent that data from being} used in subsequent operations
 that might leak it. Current processors do not generally have
 this capability, however.
 \subsection{Limiting Data Extraction from Covert Channels}
-Since spectre gets information from covert channels, one way of mitigating would be to limit control over these channels and thereby \textit{limiting the data extraction}. Multiple apporaches have been suggested to this end, one of which is to disable resolution of \textbf{javascript timer, shared array buffers} ( which are critical in javascript based spectre attack) in modern browsers. ( We see that our malicious spectre javascript code runs on \textbf{chrome} but not on \textbf{firefox} as it disables these functionalities).
+Since spectre gets information from covert channels, one way of mitigating would be to limit control over these channels and thereby \textit{limiting the data extraction}. Multiple approaches have been suggested to this end, one of which is to disable the resolution of \textbf{javascript timer, shared array buffers} ( which are critical in javascript based spectre attack) in modern browsers. ( We see that our malicious spectre javascript code runs on \textbf{chrome} but not on \textbf{firefox} as it disables these functionalities).
 
-As to it's effectiveness, these mitigations does seem to decrease the attackers performance but doesn't nullify them.
+As to it's effectiveness, these mitigations does seem to decrease the attacker's performance but doesn't nullify them.
 \subsection{Preventing Branch Poisoning}
 There are three mechanisms involved in this mitigation:- 
 \begin{itemize}
