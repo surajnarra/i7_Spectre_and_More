@@ -142,8 +142,11 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
 Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction to execute before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
 The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
 %\section{Proof of Concept Study}
+
 \section{The Experiment\cite{SeedLabs}}
+
 \subsection{Experiment Setup}
+
 \subsubsection{Setting the context}
 \begin{lstlisting}[style=CStyle]
 unsigned int buffer_size = 10;
@@ -152,9 +155,10 @@ uint8_t temp = 0;
 char* secret = "Some Secret Value";
 uint8_t array[256*4096];
 \end{lstlisting}
-buffer is a charecter array accessible using restrictedAccess()\\
-secret is to be stolen\\
-array is helper(side channel) to steal secret  
+"buffer" is a character array accessible using restrictedAccess().\\
+"secret" is to be stolen.\\
+"array" is helper(side channel) to steal secret.  
+
 \subsubsection{Restricted Access}
 \begin{lstlisting}[style=CStyle]
 uint8_t restrictedAccess(size_t x)
@@ -167,7 +171,8 @@ uint8_t restrictedAccess(size_t x)
 	}
 }
 \end{lstlisting}
-This is a simple C function which gives access to elements within buffer\_ size and \textbf{restricts access} to locations \textbf{outside buffer\_size} by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function 
+This is a simple C function which gives access to elements within buffer\_ size and \textbf{restricts access} to locations \textbf{outside buffer\_size} by returning 0. This is the target of our attack. The aim is to extract information outside buffer\_size using this function. 
+
 \subsubsection{Flush side channel}
 \begin{lstlisting}[style=CStyle]
 void flushSideChannel()
