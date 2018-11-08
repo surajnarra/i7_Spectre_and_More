@@ -137,7 +137,7 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
  \item Victim executes target code, and before the CPU realizes that its prediction was wrong, secret data is written to the cache.
  \item Attacker infers secret data from cache through timing analysis.
  \end{enumerate}
-\subsection{Varient4 - Speculative store bypass}
+\subsection{Variant4 - Speculative store bypass}
 
 Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction to execute before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
 The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
