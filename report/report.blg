@@ -17,45 +17,50 @@ I was expecting a `,' or a `}'---line 23 of file biblist.bib
  :  howpublished = {\url{https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html}}
  :                                                                                                                .
 I'm skipping whatever remains of this entry
-You've used 3 entries,
+I was expecting a `,' or a `}'---line 30 of file biblist.bib
+ :   
+ :   note = {}
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You've used 4 entries,
             2118 wiz_defined-function locations,
-            513 strings with 4674 characters,
-and the built_in function-call counts, 1041 in all, are:
-= -- 83
-> -- 82
+            518 strings with 4775 characters,
+and the built_in function-call counts, 1245 in all, are:
+= -- 102
+> -- 89
 < -- 0
-+ -- 33
-- -- 30
-* -- 70
-:= -- 188
-add.period$ -- 9
-call.type$ -- 3
-change.case$ -- 24
++ -- 36
+- -- 32
+* -- 75
+:= -- 222
+add.period$ -- 12
+call.type$ -- 4
+change.case$ -- 28
 chr.to.int$ -- 0
-cite$ -- 3
-duplicate$ -- 28
-empty$ -- 73
-format.name$ -- 30
-if$ -- 205
+cite$ -- 4
+duplicate$ -- 35
+empty$ -- 95
+format.name$ -- 32
+if$ -- 250
 int.to.chr$ -- 0
-int.to.str$ -- 3
+int.to.str$ -- 4
 missing$ -- 1
-newline$ -- 18
-num.names$ -- 6
-pop$ -- 36
+newline$ -- 23
+num.names$ -- 8
+pop$ -- 44
 preamble$ -- 1
-purify$ -- 21
+purify$ -- 24
 quote$ -- 0
-skip$ -- 23
+skip$ -- 31
 stack$ -- 0
-substring$ -- 15
-swap$ -- 4
+substring$ -- 20
+swap$ -- 5
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 12
+type$ -- 16
 warning$ -- 0
-while$ -- 6
-width$ -- 4
-write$ -- 30
-(There were 3 error messages)
+while$ -- 8
+width$ -- 5
+write$ -- 39
+(There were 4 error messages)
