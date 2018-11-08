@@ -149,7 +149,7 @@ Like \textit{variant 1}, this attack requires the presence of a \textbf{spectre 
 
 The attack now goes similar to variant 1, by first training the victim to speculatively execute the \textit{leak gadget}, and then ask for an unauthorized bit, thereby changing the \textbf{micro-architetural state}. The state is then retrieved by the \textit{transmit gadget}. As such, this attack is to be considered as an application of variant 1. 
 
-The attack has been conducted by \textbf{Graz University of Technology}\cite{NETSPECTRE} using an \textbf{AVX-based covert channel} and are able to leak 60 bits from internet per hour. The attack needs to send a higher number of packets to leak data faster, but using large number of packets could make this attack detectable.
+The attack has be conducted by \textbf{Graz University of Technology}\cite{NETSPECTRE} using an \textbf{AVX-based covert channel} and are able to leak 60 bits from internet per hour. The attack needs to send a higher number of packets to leak data faster, but using large number of packets could make this attack detectable.
 \section{The Experiment\cite{SeedLabs}}
 
 \subsection{Experiment Setup}
@@ -293,7 +293,7 @@ Two methods are employed for such preventions.
 \end{itemize}
 \subsection{Preventing Data from Entering Covert Channels}
 Future processors could potentially \textbf{track} whether the data was being
-fetched as the result of a \textbf{speculative} operation and, \textbf{if so},
+fetched as the result of a \textbf{speculative} operation and, if so,
 \textbf{prevent that data from being} used in subsequent operations
 that might leak it. Current processors do not generally have
 this capability, however.
@@ -312,13 +312,13 @@ These controls are enabled following a microcode patch and require operating sys
 %\section{Current Work Going On}
 
 \section{Conclusions}
-This report provides an overview of Spectre, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by flush+reload and evict+reload.
+This report provides an overview of \textbf{Spectre}, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by \textbf{flush+reload} and \textbf{evict+reload}.
 
 Even though no real attack exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in cloud systems where the isolation between instances is broken by variant 2. 
 
 Intel is currently redisgning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome). <Something about effects on performance>
 
-We see now how Spectre is less of a 'bug' and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
+We see now how Spectre is less of a \textbf{'bug'} and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
 
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who has taught us a lot of stuff throughout the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
@@ -391,7 +391,7 @@ It was a great experience working as a team and reading various papers . This pr
 	Briefly speaking, inorder to perform these attacks, the atackers primarily use the \textbf{"Flush+Reload"}
 	technique and also \textbf{"Evict+Reload"}, a variant, on microarchitectural components such as instruction cache, lower level caches, the BTB, branch history, etc. 
 	
-	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{cflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
+	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{clflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
 	
 	In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead of flush, the required cache line is evicted by accessing other memory locations. When sufficiently large accesses are made, the required line is evicted as there is only a finite space in the caches.
 	
@@ -404,7 +404,6 @@ It was a great experience working as a team and reading various papers . This pr
 	\begin{itemize}
 		\item \textbf{VLIW architechture : } Architecture which allows programs to explicitly specify instructions to execute in parallel. 
 		\item \textbf{Instruction pipeline cycle : }  A technique in which instruction execution is divided into stages\textit{( I , E , M , W , ..)} for implementing instruction-level parallelism within a single processor. 
-			\item \textbf{Spectre gadget :} a code fragment, generally inside the victim, whose speculative execution will transfer the victim’s sensitive information into a covert channel.
 		\item \textbf{transient instructions : } Instructions which shouldn't be executed through program logic, but are being speculatively executed. The cpu state after their execution is reverted eventually.  
 		\item \textbf{Direct calls and jumps : } Branch instructions whose target address is encoded within the instruction itself.
 		\item \textbf{Indirect calls and jumps : } Branch instructions whose target address is stored in a register specified in the instruction. Thus, their target address are computed at runtime.
@@ -440,7 +439,7 @@ It was a great experience working as a team and reading various papers . This pr
 
 \section{: KAISER(patches Meltdown but not Spectre)}
 
-Kernel Page Table Isolation(KPTI), previously known as KAISER(Kernel Address Isolation to have Side channels Efficiently Removed) is a kernel feature to mitigate the Meltdown security vunerability. It doesn't provide a safeguard against Spectre.
+Kernel Page Table Isolation(KPTI), previously known as KAISER(Kernel Address Isolation to have Side channels Efficiently Removed) is a kernel feature to mitigate the \textbf{Meltdown} security vunerability. It doesn't provide a safeguard against Spectre.
 
 KPTI fixes leaks by \textbf{seperating user-space and kernel-space page tables} completely. One set of page table consisting of both user-space and kernel-space addresses exists but is only used when the the system is running in kernel mode.The second set of page tables for use in user mode contains a copy of user-space and a \textbf{minimal set of kernel-space mappings} that provides the information needed to enter or exit system calls, interrupts and exceptions.
 
