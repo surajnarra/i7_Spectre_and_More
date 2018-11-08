@@ -373,38 +373,38 @@ It was a great experience working as a team and reading various papers . This pr
 \begin{appendices}	
 	\section{: Terminology}
 	\begin{itemize}
-		\item \textbf{VLIW architechture : } Architectures which allows programs to explicitly specify instructions to execute in parallel. 
+		\item \textbf{VLIW architechture : } Architecture which allows programs to explicitly specify instructions to execute in parallel. 
 		\item \textbf{Instruction pipeline cycle : }  A technique in which instruction execution is divided into stages\textit{( I , E , M , W , ..)} for implementing instruction-level parallelism within a single processor. 
 		\item \textbf{transient instructions : } Instructions which shouldn't be executed through program logic, but are being speculatively executed. The cpu state after their execution is reverted eventually.  
-		\item \textbf{Direct calls and jumps : } Branch instructions whose target address is encoded in the instruction itself.
+		\item \textbf{Direct calls and jumps : } Branch instructions whose target address is encoded within the instruction itself.
 		\item \textbf{Indirect calls and jumps : } Branch instructions whose target address is stored in a register specified in the instruction. Thus, their target address are computed at runtime.
-		\item \textbf{Conditional Branching : } Branch instructions whose target address depends on the "condition variable" of the instruction.
+		\item \textbf{Conditional Branching : } Branch instructions whose target address depends upon the "condition variable" of the instruction.
 		\item \textbf{Buffer overflow : }  An attack where a buffer is overflown and malicious code is injected into the required memory locations.
 		\item \textbf{cache line bouncing : } When parallel processors access the same cache line, the ownership / valid bit for the cache line is transfered / bounces from one processor to another.
-		\item \textbf{false sharing : }	 A degrading usage pattern where two processors alter different data elements in the same cache line. Logically they aren't sharing any data, but because of granularity of cache line.
+		\item \textbf{false sharing : }	 A degrading usage pattern where two processors alter different data elements in the same cache line. Logically they aren't sharing any data, but because of granularity of cache line, the ownership of the cache line keeps shuffling.
 	\end{itemize}
 	\newpage
 	\section{: Meltdown. Lets melt its cocoon}
 	% the \\ insures the section title is centered below the phrase: AppendixA
 	
-	\textbf{PersonX}: Do you have a Sibling?\\
+	\textbf{PersonX}: Do you have any siblings?\\
 	
-	\textbf{Spectre}: Ahh yes I have one named Meltdown\\
+	\textbf{Spectre}: Ahh yes, I have one named Meltdown.\\
 	
 	\textbf{PersonX}: Can you tell us something about it?\\
 	
-	\textbf{Spectre}: Like every pair of Siblings we are from same Parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet we are not the same. It is different from me in the following sense.
+	\textbf{Spectre}: Like any pair of siblings we are from  the same parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet, we are not the same. It is different from me in the following sense.
 	
 	\section{:  Onomastics of Spectre and Meltdown \cite{NameOrigin}}
 	% the \\ insures the section title is centered below the phrase: Appendix B
 	
 	\textbf{PersonX}: What was the reason that your parents chose these names for you?\\
 	
-	\textbf{Spectre}: Well I don't know. You should go and ask my parents, I suppose. From what they have told me or what many believe is the following reason. It is because since my internals are based on \textbf{'Speculative Execution'}  so they wanted something that sounds similar.\\ When I was born/discovered they knew I am very dangerous to a department called cyber security hence one of my parents \textbf{Paul Kocher} named me "Spectre" which really means a \textbf{ghost}. I not only was supposed to \textbf{haunt the cyber security proffessionals} but also was largely \textbf{invisible} to the ordinary program execution.\\
+	\textbf{Spectre}: Well I don't know. You should go and ask my parents I suppose. From what they have told me or what many believe is the following reason. For me it is because since my internals are based on \textbf{'Speculative Execution'}  so they wanted something similar sounding.\\ When I was born/discovered they knew I am very dangerous to a department called cyber security hence one of my parents \textbf{Paul Kocher} named me "Spectre" which really means a \textbf{ghost}. I not only was supposed to \textbf{haunt the cyber security proffessionals} but also was largely \textbf{invisible} to the ordinary program execution.\\
 	
 	\textbf{PersonX}: What about the naming of "Meltdown"?\\
 	
-	\textbf{Spectre}: The thinking of the name of "Meltdown" actually ironically haunts me and makes me really jealous. It is believed to be coined by one of my parent \textbf{Daniel Gruss} . The reason given for this coining of name was that since it \textbf{melts the boundary} \textbf{between programs} and \textbf{OS} it is aptly called "Meltdown". The name also made it sounds really devastating, with a huge impact, like an actual \textbf{meltdown in a nuclear reactor}.\\
+	\textbf{Spectre}: The idea behind the name "Meltdown" actually makes me really jealous. It is believed to be coined by one of my parents, \textbf{Daniel Gruss} . As it \textbf{melts the boundary} \textbf{between programs} and \textbf{OS}, it is aptly christened "Meltdown". The name also makes it sounds really devastating, with a huge impact, like an actual \textbf{meltdown in a nuclear reactor}.\\
 	Moreover, in \textbf{German}, meltdown is \textbf{'Kernschmelze'}, which means \textbf{'melting of the core'}. Since we call the CPU as a core and indeed a 'CPU Kern' so it is also a wordplay, implying that the CPU is not in a good condition."
 
 
