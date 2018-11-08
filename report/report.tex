@@ -106,11 +106,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently named \textbf{"Spectre"} from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations require basics understanding of some terms which is covered in Appendix A.\\
+This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations require basics understanding of some terms which is covered in Appendix A.
 
-Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}. We then mention the \textbf{proof of concept} study done by google. \\
+Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}.
+% We then mention the \textbf{proof of concept} study done by google. \\
 
-Finally we discuss \textbf{mitigations} with respect to different dimensions of effectiveness cost and applicability.
+Finally we discuss \textbf{mitigations} with respect to different dimensions of effectiveness, cost and applicability.
 %
 %This is a simple report template with the UCT logo. Feel free to use/modify it to suit your needs. Variables that need to be altered have been commented to make modifications easier. For example if you need to change the university logo, look for the comment \texttt{\% University Logo} in this file and then make appropriate modifications in that line.
 %
@@ -119,10 +120,10 @@ Finally we discuss \textbf{mitigations} with respect to different dimensions of 
 Let's look into the underlying facts and techniques that spectre is based upon.
 \subsection{Out of order Execution}
 
-\textbf{Out of order execution} is a paradigm in which instructions are executed not in the order of how they appear but on the \textbf{input data and execution units availiability} to the processor for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
+\textbf{Out of order execution} is a paradigm in which instructions are executed not in the order of how they appear but the order depends on the \textbf{availiability of input data and execution units} to the processor for their execution. This is a commonly used approach in high performing processors. Clearly, this approach efficiently uses the instruction cycles and reduces the cost delay of executing a program.  
 
 \subsubsection{More details}
-The earlier processors( \textbf{in-order executive} ) differ from an \textbf{OoOE ( out of order executive)} processor in processing an instruction as follows. An inorder processor fetches the instruction, waits for it's inputs and availiability of execution units and then executes the instruction. It finally writes the result of instruction into the appropriate register in the register file. 
+The earlier processors( \textbf{in-order execution} ) differ from an \textbf{OoOE ( out of order execution)} processor in processing an instruction as follows. An inorder processor fetches the instruction, waits for it's inputs and availiability of execution units and then executes the instruction. It finally writes the result of instruction into the appropriate register in the register file. 
 
 In contrast, OoOE processors breaks up the processing of instructions into these steps:
 \begin{enumerate}
