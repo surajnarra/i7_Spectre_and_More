@@ -149,7 +149,7 @@ Like \textit{variant 1}, this attack requires the presence of a \textbf{spectre 
 
 The attack now goes similar to variant 1, by first training the victim to speculatively execute the \textit{leak gadget}, and then ask for an unauthorized bit, thereby changing the \textbf{micro-architetural state}. The state is then retrieved by the \textit{transmit gadget}. As such, this attack is to be considered as an application of variant 1. 
 
-The attack has be conducted by \textbf{Graz University of Technology}\cite{NETSPECTRE} using an \textbf{AVX-based covert channel} and are able to leak 60 bits from internet per hour. The attack needs to send a higher number of packets to leak data faster, but using large number of packets could make this attack detectable.
+The attack has been conducted by \textbf{Graz University of Technology}\cite{NETSPECTRE} using an \textbf{AVX-based covert channel} and are able to leak 60 bits from internet per hour. The attack needs to send a higher number of packets to leak data faster, but using large number of packets could make this attack detectable.
 \section{The Experiment\cite{SeedLabs}}
 
 \subsection{Experiment Setup}
@@ -404,6 +404,7 @@ It was a great experience working as a team and reading various papers . This pr
 	\begin{itemize}
 		\item \textbf{VLIW architechture : } Architecture which allows programs to explicitly specify instructions to execute in parallel. 
 		\item \textbf{Instruction pipeline cycle : }  A technique in which instruction execution is divided into stages\textit{( I , E , M , W , ..)} for implementing instruction-level parallelism within a single processor. 
+			\item \textbf{Spectre gadget :} a code fragment, generally inside the victim, whose speculative execution will transfer the victim’s sensitive information into a covert channel.
 		\item \textbf{transient instructions : } Instructions which shouldn't be executed through program logic, but are being speculatively executed. The cpu state after their execution is reverted eventually.  
 		\item \textbf{Direct calls and jumps : } Branch instructions whose target address is encoded within the instruction itself.
 		\item \textbf{Indirect calls and jumps : } Branch instructions whose target address is stored in a register specified in the instruction. Thus, their target address are computed at runtime.
