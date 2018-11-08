@@ -43,7 +43,7 @@
 
 \setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 
-\title{i7: Spectre and More}								% Title
+\title{Spectre and More}								% Title
 \author{Sanchit Jain\\ Charith \\Rahul\\Suraj\\ Jeevitesh}								% Author
 \date{\today}											% Date
 
@@ -143,7 +143,7 @@ Further, modern processor uses some decoupling techinques such as renaming of re
 \subsection{Speculation Execution}
 
 When a processor encounters a branch instruction whose branching condition is not yet evaluated ( generally, because this instruction is being executed out of order), the \textbf{speculative execution paradigm} allows the processor to make a guess and take the branch and starts executing. \\
-The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good brach prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
+The cpu has to store it's register state before it speculatively executes. In case it comes to know that the branch it started evaluating isn't the right one, it reverts back to the saved state. With a good branch prediction algorithm, clearly, this paradigm greatly improves the execution time of a program with many branch instructions. 
 
 Let us see some of the mechanisms for prediction employed in modern-day processors.  
 
@@ -325,9 +325,10 @@ A very simple approach to this is to prevent Speculative Execution altogether. S
 
 Current processors do \textbf{not} have software which can \textbf{issue commands} to disable speculative execution but they may like to include that in near future given the fact that discovery of this vulnerability is quite recent. Alternatively, some hardware products (such as embedded systems) could switch to alternate processor models that do not implement speculative execution. \\
 
+Software techniques like usng a \textbf{empty loop} of say 100 instructions such that speculative execution doesn't crosse these many instructions before it figures out the wrong prediction.
 Alternatively, the software could be modified to use serializing or speculation blocking instructions that ensure that instructions following them are not executed speculatively. Intel and AMD recommend the use of the \textbf{\textit{lfence}} instruction.\\
 
-The above are some \textbf{cheap alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
+The above are some \textbf{temporary alternatives} to a very costly problem of updating the \textbf{software binaries} of legacy softwares.
 \subsection{Preventing Access to Secret Data}
 We can have a \textbf{separate process} which does the restricted tasks. Because Spectre attacks only \textbf{leverage} the \textbf{victim’s permissions} to access the data hence by isolating them using the process abstraction is a very elegant way to prevent access to secret data. \textbf{Google Chrome} opens \textbf{each website} as a \textbf{seperate process} for the same reason. This is arguably an \textbf{efficient} and \textbf{cost effective} way of defeating spectre which is applied in lots of real world applications.
 \subsubsection{More Info}
