@@ -251,7 +251,7 @@ $scores[i]$ stores the number of times $i^{th}$ element was brought to cache.
 CACHE\_HIT\_THRESHOLD is used to differentiate between elements already present in cache and those coming from main memory.
 
   
-\subsection{Our Result\cite{GITHUB_LINK}}
+\subsection{Our Result}
 
 \subsubsection{C-Program}
 We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideChannel()} 1000 number of times and then found the element of array which was present in cache for the most number of times. The result is as follows.\\
@@ -260,7 +260,7 @@ We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideC
 	{\centering
     \vspace*{0.0 cm}
 \includegraphics[scale = 0.5]{spectre.png}\\[1.0 cm]}
-\subsubsection{JS-code}
+\subsubsection{JS-code\cite{GITHUB_LINK}}
 Demeonstrating the same in a browser using JavaScript.\\
 
 \vspace*{0.0 cm}
@@ -378,7 +378,7 @@ It was a great experience working as a team and reading various papers . This pr
 	\subsection{The Memory Hierarchy}
 	In general, the memory of the CPU is divided into three caches and an external memory and is \textbf{hierarchial}. This is to allow faster access time to the data essential to the process running on the CPU. The chain of access is passed from \textbf{L1} cache to \textbf{L2} cache, from \textbf{L2} to \textbf{L3} cache and then to external memory based on whether we recieve a hit on the presence of the required data among the caches. The L1 cache has the fastest  access time and this slows down as we move down this hierarchy. It is to noted that while each core has it's own L1 and L2 caches the L3 is common for the cores.
 	
-	The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
+%	The coherence of the L1 and L2 caches across the multiple cores is maintained by the cache coherence protocol that usually is dependant on \textbf{MESI(Modified-Exclusive-Shared-Invalid) Protocol}.
 	
 	Several properties of the cache coherency protocol such as \textbf{\textit{cache-line bouncing}}, \textbf{\textit{false sharing}} can sometimes be abused as a replacement for cache eviction using the \textbf{clflush instruction} or eviction patterns.
 	\subsection{Microarchitectural Side-Channel Attacks/Flush-Reload Techniques}
