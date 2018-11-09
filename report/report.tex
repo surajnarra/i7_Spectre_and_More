@@ -251,23 +251,23 @@ Line 10,11,12 finds the time taken to access addr which is $array[i*4096+DELTA]$
 $scores[i]$ stores the number of times $i^{th}$ element was brought to cache.
 CACHE\_HIT\_THRESHOLD is used to differentiate between elements already present in cache and those coming from main memory.
 
-  
+  \newpage
 \subsection{Our Result}
 
 \subsubsection{C-Program}
-We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideChannel()} 1000 number of times and then found the element of array which was present in cache for the most number of times. The result is as follows.\\
+We executed \textbf{spectreAttack()} immediately followed by \textbf{reloadSideChannel()} 1000 number of times and then found the element of array which was present in cache for the most number of times. The result is as follows.
 
 \vspace*{0.0 cm}
 	{\centering
     \vspace*{0.0 cm}
-\includegraphics[scale = 0.5]{spectre.png}\\[1.0 cm]}
+\includegraphics[scale = 0.45]{spectre.png}\\[1.0 cm]}
 \subsubsection{JS-code\cite{GITHUB_LINK}}
-Demeonstrating the same in a browser using JavaScript.\\
+Demeonstrating the same in a browser using JavaScript.
 
 \vspace*{0.0 cm}
 	{\centering
     \vspace*{0.5 cm}
-\includegraphics[scale = 0.7]{spectre_javascript.png}\\[1.0 cm]}
+\includegraphics[scale = 0.6]{spectre_javascript.png}\\[1.0 cm]}
 
 
 \newpage
