@@ -106,9 +106,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in javascript to extract sensitive information such as password. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
+This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in \textbf{javascript} to extract sensitive information such as passwords. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
 
-Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different varients}.
+Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different variants}.
 % We then mention the \textbf{proof of concept} study done by google. \\
 
 Finally we discuss \textbf{mitigations} with respect to different dimensions of effectiveness, cost and applicability.
@@ -118,7 +118,7 @@ Finally we discuss \textbf{mitigations} with respect to different dimensions of 
 %A Table of Contents and a bibliography have also been implemented. To add entries to your bibliography, simply edit \texttt{biblist.bib} in the root folder and then use the \texttt{\textbackslash cite\{\ldots\}} command in \texttt{main.tex} \cite{bibtex}. The Table of Contents will be updated automatically.
 \section{What is Spectre?}
 \subsection{General}
-Spectre is a class of attacks that exploit security vulnerabilities in most modern processors. Specifically, the persistent effects (in cache) of speculative execution resulting from a branch mis-prediction are used to read data that is supposed to be inaccessible to the attacker. The assumption that speculative execution can be completely rolled back turns out to be wrong, and spectre attacks read this leaked data. There are several variants to spectre, we describe two of them below.
+    \textbf{Spectre} is a class of attacks that exploit security vulnerabilities in most modern processors. Specifically, the persistent effects (in cache) of \textbf{speculative execution} resulting from a branch mis-prediction are used to read data that is supposed to be \textbf{inaccessible} to the attacker. The assumption that speculative execution can be completely rolled back turns out to be wrong, and spectre attacks read this \textbf{leaked data}. There are several variants to spectre, we describe two of them below.
 \subsection{Variant1 - Bounds Check Bypass}
 This variant involves training the CPU's branch predictor to mis-predict a \textbf{conditional branch}, causing some instructions that read secret data to be executed. 
 \begin{enumerate}
@@ -142,7 +142,7 @@ CPUs use the same BTB across different contexts and privilege levels. The attack
 Variant 4 uses that fact that when a CPU allows a \textbf{load} instruction to execute before an \textbf{older store} instruction executes because it \textit{predicts} that the load instruction is not dependent on the store instruction and allows speculative execution of further instructions using the read value.
 The attack make sures the read value leads to \textit{transient} instructions bringing sensitive information to side channels. Finally, it gets the information from these side channels.
 %\section{Proof of Concept Study}
-\subsection{New Varient? - Spectre on Net}
+\subsection{New variant? - Spectre on Net}
 All the above discussed variants need to be run locally to retrieve data. However, a remote attack based on \textit{spectre variant 1} has been found, which has been termed as \textbf{'NetSpectre'} by it's founders. This attack doesn't need the attacker code running on the target machine and hence, can potentially read any arbitary memory on the internet.  
 \subsubsection{Technical details}
 Like \textit{variant 1}, this attack requires the presence of a \textbf{spectre gadget} in the code of the target, or broadly speaking, in any API or framework that the target uses. In particular, it uses two kinds of Spectre gadgets. A \textbf{\textit{leak gadget}} which changes the microarchitecture state depending on the value of secret data and a \textbf{\textit{transmit gadget}} which conveys the state. Here, it is not the value returned by the transmit gadget, that leaks the state, but it's \textit{response time}.
@@ -196,7 +196,7 @@ Flushing the elements of array is required to ensure that all elements of array 
 There is no significance of DELTA. Any other value can be used instead.\\
 Only array elements present in different pages are used to ensure that they are present in different pages to overcome effects of prefetching \\
 
-\subsubsection{Spectre Attack(varient 1)}
+\subsubsection{Spectre Attack(variant 1)}
 \begin{lstlisting}[style=CStyle]
 void spectreAttack(size_t larger_x)
 {
@@ -293,7 +293,7 @@ Two methods are employed for such preventions.
 \end{itemize}
 \subsection{Preventing Data from Entering Covert Channels}
 Future processors could potentially \textbf{track} whether the data was being
-fetched as the result of a \textbf{speculative} operation and, \textbf{if so},
+fetched as the result of a \textbf{speculative} operation and, if so,
 \textbf{prevent that data from being} used in subsequent operations
 that might leak it. Current processors do not generally have
 this capability, however.
@@ -312,13 +312,13 @@ These controls are enabled following a microcode patch and require operating sys
 %\section{Current Work Going On}
 
 \section{Conclusions}
-This report provides an overview of Spectre, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by flush+reload and evict+reload.
+This report provides an overview of \textbf{Spectre}, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by \textbf{flush+reload} and \textbf{evict+reload}.
 
 Even though no real attack exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in cloud systems where the isolation between instances is broken by variant 2. 
 
 Intel is currently redisgning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome). <Something about effects on performance>
 
-We see now how Spectre is less of a 'bug' and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
+We see now how Spectre is less of a \textbf{'bug'} and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
 
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who has taught us a lot of stuff throughout the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
@@ -391,7 +391,7 @@ It was a great experience working as a team and reading various papers . This pr
 	Briefly speaking, inorder to perform these attacks, the atackers primarily use the \textbf{"Flush+Reload"}
 	technique and also \textbf{"Evict+Reload"}, a variant, on microarchitectural components such as instruction cache, lower level caches, the BTB, branch history, etc. 
 	
-	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{cflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
+	In the \textbf{"Flush+Reload"} technique , the attack begins by flushing a cache line (in Intel via \textit{clflush} instruction) that is shared with the victim. When the victim runs it's programs for a while, the attacker keeps measuring the time it takes to do a memory read at the address corresponding line, the access will be fast if the victim access it, else the access will be slow. Therefore by performing these accesses and calculating the access times the attacker can find if the victim accessed the evicted line between these two acts.
 	
 	In the \textbf{"Evict+Reload"} technique, the attacker does the same but instead of flush, the required cache line is evicted by accessing other memory locations. When sufficiently large accesses are made, the required line is evicted as there is only a finite space in the caches.
 	
@@ -439,7 +439,7 @@ It was a great experience working as a team and reading various papers . This pr
 
 \section{: KAISER(patches Meltdown but not Spectre)}
 
-Kernel Page Table Isolation(KPTI), previously known as KAISER(Kernel Address Isolation to have Side channels Efficiently Removed) is a kernel feature to mitigate the Meltdown security vunerability. It doesn't provide a safeguard against Spectre.
+Kernel Page Table Isolation(KPTI), previously known as KAISER(Kernel Address Isolation to have Side channels Efficiently Removed) is a kernel feature to mitigate the \textbf{Meltdown} security vunerability. It doesn't provide a safeguard against Spectre.
 
 KPTI fixes leaks by \textbf{seperating user-space and kernel-space page tables} completely. One set of page table consisting of both user-space and kernel-space addresses exists but is only used when the the system is running in kernel mode.The second set of page tables for use in user mode contains a copy of user-space and a \textbf{minimal set of kernel-space mappings} that provides the information needed to enter or exit system calls, interrupts and exceptions.
 

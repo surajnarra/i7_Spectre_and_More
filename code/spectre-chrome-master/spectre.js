@@ -178,7 +178,7 @@ function main()
     if(window.SharedArrayBuffer)
     {
         log("eviction buffer sz: " + CACHE_SIZE + "MB");
-        check([115, 112, 101, 99, 116, 114, 101, 46, 106, 115]);
+        check([83,111,109,101,32,83,101,99,114,101,116,32,86,97,108,117,101]);
     }
     else
     {
