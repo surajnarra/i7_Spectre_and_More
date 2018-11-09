@@ -150,6 +150,7 @@ Like \textit{variant 1}, this attack requires the presence of a \textbf{spectre 
 The attack now goes similar to variant 1, by first training the victim to speculatively execute the \textit{leak gadget}, and then ask for an unauthorized bit, thereby changing the \textbf{micro-architetural state}. The state is then retrieved by the \textit{transmit gadget}. As such, this attack is to be considered as an application of variant 1. 
 
 The attack has be conducted by \textbf{Graz University of Technology}\cite{NETSPECTRE} using an \textbf{AVX-based covert channel} and are able to leak 60 bits from internet per hour. The attack needs to send a higher number of packets to leak data faster, but using large number of packets could make this attack detectable.
+\newpage
 \section{The Experiment\cite{SeedLabs}}
 
 \subsection{Experiment Setup}
@@ -310,7 +311,7 @@ There are three mechanisms involved in this mitigation as proposed by Intel\cite
 \end{itemize}
 These controls are enabled following a microcode patch and require operating system or BIOS support for use. \textbf{The performance impact} varies from \textbf{a few percent} to a factor of \textbf{4} or more, depending on which countermeasures are employed, how comprehensively they are applied (e.g. limited use in the kernel vs. full protection for all processes), and the efficiency of the hardware and microcode implementations.
 %\section{Current Work Going On}
-
+\newpage
 \section{Conclusions}
 This report provides an overview of \textbf{Spectre}, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by \textbf{flush+reload} and \textbf{evict+reload}.
 
@@ -357,7 +358,7 @@ We have actually highlighted the important points throughout the report to help 
 	\item \textbf{NetSpectre}\cite{NETSPECTRE} Retrieves bit at very \textbf{slow} rate (60 bits/seconds) and any \textbf{attempt} to \textbf{improve} this data leak rate will make this attack \textbf{detectable}.
 	\item \textbf{\textit{Variant2}} is \textbf{difficult to implement} in the given time constraint for this project because it needs more knowledge on \textbf{ROP} and \textbf{Buffer Overflow Attacks}.
 \end{itemize}
-\section{Fresh Ideas}
+\section{Fresh Idea}
 \begin{itemize}
 	\item There are \textbf{browsers} which open new \textbf{tabs in same process} (different threads). Such browsers can be \textbf{exploited} using Spectre \textit{Variant1} to extract sensitive information.
 \end{itemize}
@@ -453,7 +454,6 @@ It was a great experience working as a team and reading various papers . This pr
 		\item \textbf{cache line bouncing : } When parallel processors access the same cache line, the ownership / valid bit for the cache line is transfered / bounces from one processor to another.
 		\item \textbf{false sharing : }	 A degrading usage pattern where two processors alter different data elements in the same cache line. Logically they aren't sharing any data, but because of granularity of cache line, the ownership of the cache line keeps shuffling.
 	\end{itemize}
-	\newpage
 	\section{: Meltdown. Lets melt its cocoon}
 	% the \\ insures the section title is centered below the phrase: AppendixA
 	
@@ -465,18 +465,17 @@ It was a great experience working as a team and reading various papers . This pr
 	
 	\textbf{Spectre}: Like every pair of Siblings we are from same Parents. The basic ideologies and mechanism through which we arise are the same. We both are based on Speculative Execution/Branch Prediction. But yet we are not the same. It is different from me in the following sense. Meltdown is more easy to implement but also less general. It affects only Intel processors. It also reads the effects of speculative execution through the cache, but the speculative execution in this case is done while the CPU waits for a privilege check. 
 	That's right, Meltdown accesses the kernel memory (which is obviously secret to the process) by tricking the cpu into speculatively executing instructions that are supposed to be executed \textit{after} the privelege check \textit{before} the check is completed. Then its technique of obtaining the data from cache is similar to the ones I use. 
+	
 	\section{:  Onomastics of Spectre and Meltdown \cite{NameOrigin}}
 	% the \\ insures the section title is centered below the phrase: Appendix B
+	\textbf{PersonX}: What was the reason that your parents chose these names for you?
 	
-	\textbf{PersonX}: What was the reason that your parents chose these names for you?\\
+	\textbf{Spectre}: Well I don't know. You should go and ask my parents I suppose. From what they have told me or what many believe is the following reason. For me it is because since my internals are based on \textbf{'Speculative Execution'}  so they wanted something similar sounding.\\ When I was born/discovered they knew I am very dangerous to a department called cyber security hence one of my parents \textbf{Paul Kocher} named me "Spectre" which really means a \textbf{ghost}. I not only was supposed to \textbf{haunt the cyber security proffessionals} but also was largely \textbf{invisible} to the ordinary program execution.
 	
-	\textbf{Spectre}: Well I don't know. You should go and ask my parents I suppose. From what they have told me or what many believe is the following reason. For me it is because since my internals are based on \textbf{'Speculative Execution'}  so they wanted something similar sounding.\\ When I was born/discovered they knew I am very dangerous to a department called cyber security hence one of my parents \textbf{Paul Kocher} named me "Spectre" which really means a \textbf{ghost}. I not only was supposed to \textbf{haunt the cyber security proffessionals} but also was largely \textbf{invisible} to the ordinary program execution.\\
-	
-	\textbf{PersonX}: What about the naming of "Meltdown"?\\
+	\textbf{PersonX}: What about the naming of "Meltdown"?
 	
 	\textbf{Spectre}: The idea behind the name "Meltdown" actually makes me really jealous. It is believed to be coined by one of my parents, \textbf{Daniel Gruss} . As it \textbf{melts the boundary} \textbf{between programs} and \textbf{OS}, it is aptly christened "Meltdown". The name also makes it sounds really devastating, with a huge impact, like an actual \textbf{meltdown in a nuclear reactor}.\\
 	Moreover, in \textbf{German}, meltdown is \textbf{'Kernschmelze'}, which means \textbf{'melting of the core'}. Since we call the CPU as a core and indeed a 'CPU Kern' so it is also a wordplay, implying that the CPU is not in a good condition."
-
 
 \section{: KAISER(patches Meltdown but not Spectre)}
 
