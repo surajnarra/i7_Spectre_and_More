@@ -106,12 +106,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Abstract}
-This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to a little detail. The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in \textbf{javascript} to extract sensitive information such as passwords. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix A.
+This report is directed towards the basic understanding of one of the two famous vulnerabilities discovered recently which is named \textbf{"Spectre"}(the other is meltdown) from the very basics to substantial detail. The report explains in simple language and concise format, our understanding of the vulnerability developed after reading relevant papers.  The report explains a \textbf{simple C program} that demonstrates the \textbf{basic principles} in a very simple setup. The same principles can be applied in \textbf{javascript} to extract sensitive information such as passwords. Studying of Spectre and its mitigations requires basic understanding of some terms which are covered in Appendix B.
 
 Apart from the experiment the report focuses on the \textbf{background required} followed by its \textbf{different variants}.
 % We then mention the \textbf{proof of concept} study done by google. \\
 
-Finally we discuss \textbf{mitigations} with respect to different dimensions of effectiveness, cost and applicability.
+Finally we discuss \textbf{mitigations} with respect to different dimensions of effectiveness, cost and applicability which is the place where we present our critique.
 %
 %This is a simple report template with the UCT logo. Feel free to use/modify it to suit your needs. Variables that need to be altered have been commented to make modifications easier. For example if you need to change the university logo, look for the comment \texttt{\% University Logo} in this file and then make appropriate modifications in that line.
 %
@@ -312,24 +312,54 @@ These controls are enabled following a microcode patch and require operating sys
 %\section{Current Work Going On}
 
 \section{Conclusions}
-This report provides an overview of \textbf{Spectre}, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen from a browser. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by \textbf{flush+reload} and \textbf{evict+reload}.
+This report provides an overview of \textbf{Spectre}, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by \textbf{flush+reload} and \textbf{evict+reload}.
 
-Even though no real attack exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in cloud systems where the isolation between instances is broken by variant 2. 
+Even though no real attack exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in \textbf{cloud systems} where the isolation is broken by \textit{variant 2}. 
 
-Intel is currently redisgning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome). <Something about effects on performance>
+Intel is currently redesigning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome). <Something about effects on performance>
 
 We see now how Spectre is less of a \textbf{'bug'} and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
 
 \section{Individual Contributions}
-
+We took each others help in almost each of the topics but here is a brief high level classification for completeness.
 \begin{itemize}
-	\item \textbf{Sanchit Jain :- }  Mitigations 4.1,4.2,4.3,4.5 ,Abstract,Appendix C,D
-	\item \textbf{Charith :- } The Experiment 3.1 3.2 
-	\item \textbf{Rahul :- } 2.5,4.4, Appendix A,B
-	\item \textbf{Suraj :- } What is Spectre 2.2,2.3
-	\item \textbf{Jeevitesh :- } 2.4, A.4,A.5 Appendix E
+	\item \textbf{Sanchit Jain : }  Mitigations 4.1,4.2,4.3,4.5 ,Appendix C,D
+	\item \textbf{Charith : } The Experiment 3.1 3.2 
+	\item \textbf{Rahul : } 2.5,4.4, Appendix A,B
+	\item \textbf{Suraj : } What is Spectre 2.2,2.3
+	\item \textbf{Jeevitesh : } 2.4, A.4,A.5 Appendix E
 \end{itemize}
-We all read different parts of the main paper and some other side notes and urls correcponding to the sections mentioned above. 
+We all read different parts of the main paper and some other side notes and urls corressponding to the sections mentioned above. 
+\section{Next Steps}
+Here are some of our failures which we are currently working on and will continue to work on the same till the deadline and since this has developed keep interest amongst us we may even continue even after that. Some of them are mentioned below
+\begin{itemize}
+	\item We were unable to experimentally demonstrate variant 2 of spectre. We are not able to bypass the isolation security between processes set up by the OS. We plan to look into this with rigour. We will look into the Google's project zero for the same.\cite{ProjectZero}
+	\item We are unable to improve on the javascript\cite{GITHUB_LINK} experiment of Spectre attack on the browser and make it consistent.
+\end{itemize}
+\section{Salient Points}
+We have actually highlighted the important points throughout the report to help the reader but for completeness the salient features are as follows
+\begin{itemize}
+		\item The experiment clearly demonstrates in a very modular fashion the exact control flow and implementation of how a Spectre attack variant1 can be carried out.
+		\item The attack is based on very fundamental aspects/mechanism of modern day processors.
+		
+		\item Variant2 looks more severe as it can effect even a properly written victim code.
+		 
+		\item The suggested mitigations will lead to decrease in performance resulting in a tradeoff between security and performance which is clearly documented in the corresponding section
+		\item In general Spectre is difficult to exploit which is evident from the fact that there has been no instance of such an attack till date.
+		\item In the paper they have been very transparent in pointing out the flaws in the mitigations that has been provided
+
+\end{itemize}
+\section{Negative Aspects}
+\begin{itemize}
+	\item Spectre is very difficult to exploit.(Actually positive to modern day processor)
+	\item Google's Project Zero\cite{ProjectZero} have worked very hard in presenting the POC's but it is actually very hard to use it in real life large scale effect.
+	\item NetSpectre\cite{NETSPECTRE} Retrieves bit at very slow rate (60 bits/seconds) and any attempt to improve this data leak rate will make this attack detectable.
+	\item Variant2 is out of scope for this project in terms of implementation/Experiment because it needs more knowledge on ROP and Buffer Overflow Attacks
+\end{itemize}
+\section{Fresh Ideas}
+\begin{itemize}
+	\item There are browsers which open new tabs in same process (different threads). Such browsers can be exploited using Spectre Variant1 to extract sensitive information.
+\end{itemize}
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who has taught us a lot of stuff throughout the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
 
@@ -455,7 +485,7 @@ KPTI fixes leaks by \textbf{seperating user-space and kernel-space page tables} 
 
 The reason why KPTI doesn't work for Spectre is Spectre security vunerability \textbf{completely occurs in the user-space addresses,} hence splitting user-space and kernel-space addresses into different page tables yields no solution.
 
-   
+
 	
 \end{appendices}
 \end{document}
