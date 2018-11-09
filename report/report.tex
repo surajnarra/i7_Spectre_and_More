@@ -302,7 +302,7 @@ Since spectre gets information from covert channels, one way of mitigating would
 
 As to it's effectiveness, these mitigations does seem to decrease the attacker's performance but doesn't nullify them.
 \subsection{Preventing Branch Poisoning}
-There are three mechanisms involved in this mitigation:- 
+There are three mechanisms involved in this mitigation as proposed by Intel\cite{Intel_mitigation}:- 
 \begin{itemize}
 	\item \textbf{Indirect Branch Restricted Speculation (IBRS) : } prevents indirect branches in \textbf{privileged code} from being affected by branches in less privileged code. The processor enters a special IBRS mode, which is \textbf{not influenced} by any computations outside of IBRS modes.
 	\item \textbf{Single Thread Indirect Branch Prediction (STIBP) : } restricts branch prediction sharing between software executing on the \textbf{hyperthreads} of the \textbf{same core}.
@@ -320,6 +320,16 @@ Intel is currently redisgning its processors to mitigate Spectre vulnerabilities
 
 We see now how Spectre is less of a \textbf{'bug'} and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
 
+\section{Individual Contributions}
+
+\begin{itemize}
+	\item \textbf{Sanchit Jain :- }  Mitigations 4.1,4.2,4.3,4.5 ,Abstract,Appendix C,D
+	\item \textbf{Charith :- } The Experiment 3.1 3.2 
+	\item \textbf{Rahul :- } 2.5,4.4, Appendix A,B
+	\item \textbf{Suraj :- } What is Spectre 2.2,2.3
+	\item \textbf{Jeevitesh :- } 2.4, A.4,A.5 Appendix E
+\end{itemize}
+We all read different parts of the main paper and some other side notes and urls correcponding to the sections mentioned above. 
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who has taught us a lot of stuff throughout the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
 
