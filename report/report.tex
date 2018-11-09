@@ -314,11 +314,11 @@ These controls are enabled following a microcode patch and require operating sys
 \section{Conclusions}
 This report provides an overview of \textbf{Spectre}, the features of processors that have given rise to it, and explores a program that shows that protected data can indeed be stolen. In the process of writing it, we learned about how direct and indirect branch prediction works, how speculative execution leaks data to cache, how this leaked data can be read by the attacker by \textbf{flush+reload} and \textbf{evict+reload}.
 
-Even though no real attack exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in \textbf{cloud systems} where the isolation is broken by \textit{variant 2}. 
+Even though \textbf{no real attack} exploiting Spectre has been made till date, there are compelling proofs of concept that show that modern processors have fundamental design flaws that can result in extremely sensitive data (such as encryption keys) being stolen. The risk is even greater in \textbf{cloud systems} where the isolation is broken by \textit{variant 2}. 
 
-Intel is currently redesigning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome). <Something about effects on performance>
+Intel is currently redesigning its processors to mitigate Spectre vulnerabilities. Several software patches have been released to block specific attacks, and some browsers have applied patches (the javascript attack used in this report does not work on the latest version of chrome/Firefox).
 
-We see now how Spectre is less of a \textbf{'bug'} and more of a discovery about how modern processors leak data and how these leaks can be exploited, contrary to previous assumptions of security through isolation.
+We see now how Spectre is less of a \textbf{'bug'} and more of a \textbf{discovery} about how modern processors leak data and how these leaks can be exploited, contrary to \textbf{previous belief} of \textbf{security through isolation}.
 
 \section{Individual Contributions}
 We took each others help in almost each of the topics but here is a brief high level classification for completeness.
@@ -331,34 +331,35 @@ We took each others help in almost each of the topics but here is a brief high l
 \end{itemize}
 We all read different parts of the main paper and some other side notes and urls corressponding to the sections mentioned above. 
 \section{Next Steps}
-Here are some of our failures which we are currently working on and will continue to work on the same till the deadline and since this has developed keep interest amongst us we may even continue even after that. Some of them are mentioned below
+Here are some of our \textbf{failures} which we are currently working on and will continue to work on the same till the deadline and since this has developed keep interest amongst us we may continue even after that. Some of them are mentioned below
 \begin{itemize}
-	\item We were unable to experimentally demonstrate variant 2 of spectre. We are not able to bypass the isolation security between processes set up by the OS. We plan to look into this with rigour. We will look into the Google's project zero for the same.\cite{ProjectZero}
 	\item We are unable to improve on the javascript\cite{GITHUB_LINK} experiment of Spectre attack on the browser and make it consistent.
+	\item We were unable to experimentally demonstrate \textit{\textbf{variant 2}} of spectre. We are not able to \textbf{bypass the} isolation security between processes set up by the \textbf{OS}. We plan to look into this with rigour. We will look into the Google's project zero for the same.\cite{ProjectZero}
 \end{itemize}
 \section{Salient Points}
-We have actually highlighted the important points throughout the report to help the reader but for completeness the salient features are as follows
+We have actually highlighted the important points throughout the report to help the reader but for completeness the salient features are as follows:
 \begin{itemize}
-		\item The experiment clearly demonstrates in a very modular fashion the exact control flow and implementation of how a Spectre attack variant1 can be carried out.
-		\item The attack is based on very fundamental aspects/mechanism of modern day processors.
+		\item \textbf{The experiment} clearly demonstrates in a very \textbf{modular fashion} the exact control flow and implementation of how a Spectre attack \textit{variant 1} can be carried out.
 		
-		\item Variant2 looks more severe as it can effect even a properly written victim code.
+		\item The attack is based on the very \textbf{fundamental aspects/mechanism} of modern day processors.
+		
+		\item \textit{Variant2} looks more \textbf{severe} as it can effect even a properly written victim code.
 		 
-		\item The suggested mitigations will lead to decrease in performance resulting in a tradeoff between security and performance which is clearly documented in the corresponding section
-		\item In general Spectre is difficult to exploit which is evident from the fact that there has been no instance of such an attack till date.
-		\item In the paper they have been very transparent in pointing out the flaws in the mitigations that has been provided
+		\item The suggested mitigations will lead to decrease in performance resulting in a \textbf{tradeoff} between security and performance which is clearly documented in the corresponding section
+		\item In general Spectre is \textbf{difficult to exploit} which is evident from the fact that there has been \textbf{no} instance of such an \textbf{attack till date}.
+		\item In the paper\cite{Kocher2018spectre} they have been very \textbf{transparent} in pointing out the flaws in the mitigations that has been provided.
 
 \end{itemize}
 \section{Negative Aspects}
 \begin{itemize}
-	\item Spectre is very difficult to exploit.(Actually positive to modern day processor)
-	\item Google's Project Zero\cite{ProjectZero} have worked very hard in presenting the POC's but it is actually very hard to use it in real life large scale effect.
-	\item NetSpectre\cite{NETSPECTRE} Retrieves bit at very slow rate (60 bits/seconds) and any attempt to improve this data leak rate will make this attack detectable.
-	\item Variant2 is out of scope for this project in terms of implementation/Experiment because it needs more knowledge on ROP and Buffer Overflow Attacks
+%	\item Spectre is very difficult to exploit.(Actually positive to modern day processor)
+	\item Google's Project Zero\cite{ProjectZero} have worked very hard in presenting the \textbf{POC's} but it is actually very \textbf{hard} to use it \textbf{ in real life large scale effect}.
+	\item \textbf{NetSpectre}\cite{NETSPECTRE} Retrieves bit at very \textbf{slow} rate (60 bits/seconds) and any \textbf{attempt} to \textbf{improve} this data leak rate will make this attack \textbf{detectable}.
+	\item \textbf{\textit{Variant2}} is \textbf{difficult to implement} in the given time constraint for this project because it needs more knowledge on \textbf{ROP} and \textbf{Buffer Overflow Attacks}.
 \end{itemize}
 \section{Fresh Ideas}
 \begin{itemize}
-	\item There are browsers which open new tabs in same process (different threads). Such browsers can be exploited using Spectre Variant1 to extract sensitive information.
+	\item There are \textbf{browsers} which open new \textbf{tabs in same process} (different threads). Such browsers can be \textbf{exploited} using Spectre \textit{Variant1} to extract sensitive information.
 \end{itemize}
 \section{Acknowledgement}
 We would like to express our gratitude towards our \textbf{Prof Bernard Menezes} who has taught us a lot of stuff throughout the semester. He gave us the opportunity to do this delightful and enriching project and provided motivation for the same in each and every lecture.\\
